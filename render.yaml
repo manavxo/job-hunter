@@ -6,7 +6,6 @@ services:
     plan: free
     envVars:
       - key: ACCESS_CODE
-        generateValue: true
         sync: false
       - key: PYTHONUNBUFFERED
         value: "1"
