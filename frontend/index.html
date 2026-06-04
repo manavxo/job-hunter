@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Hunter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --bg-deep:#08090a;--bg-panel:#0f1011;--bg-surface:#191a1b;--bg-hover:#28282c;
+            --text-primary:#f7f8f8;--text-secondary:#d0d6e0;--text-tertiary:#8a8f98;--text-muted:#62666d;
+            --accent:#5e6ad2;--accent-hover:#7170ff;--accent-light:#828fff;
+            --green:#27a644;--green-soft:#10b981;--red:#ef4444;--yellow:#eab308;
+            --border-subtle:rgba(255,255,255,0.05);--border-standard:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.12)
+        }
+        body{font-family:'Inter',system-ui,-apple-system,sans-serif;font-feature-settings:"cv01","ss03";background:var(--bg-deep);color:var(--text-secondary);line-height:1.5;font-size:14px}
+        .container{max-width:1200px;margin:0 auto;padding:24px}
+        header{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;border-bottom:1px solid var(--border-subtle);background:var(--bg-panel);position:sticky;top:0;z-index:100}
+        header h1{font-size:18px;font-weight:600;color:var(--text-primary);letter-spacing:-0.24px}
+        .header-right{display:flex;align-items:center;gap:12px}
+        .profile-selector{position:relative}
+        .profile-btn{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border-standard);border-radius:6px;color:var(--text-secondary);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit}
+        .profile-btn:hover{background:rgba(255,255,255,0.06);color:var(--text-primary)}
+        .profile-dropdown{display:none;position:absolute;top:calc(100% + 4px);right:0;min-width:200px;background:var(--bg-surface);border:1px solid var(--border-standard);border-radius:8px;padding:4px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+        .profile-dropdown.show{display:block}
+        .profile-dropdown .p-item{padding:8px 12px;border-radius:6px;cursor:pointer;font-size:13px;color:var(--text-secondary);display:flex;justify-content:space-between;align-items:center}
+        .profile-dropdown .p-item:hover{background:rgba(255,255,255,0.04);color:var(--text-primary)}
+        .profile-dropdown .p-item.active{background:rgba(94,106,210,0.15);color:var(--accent-light)}
+        .profile-dropdown .p-add{padding:8px 12px;border-top:1px solid var(--border-subtle);margin-top:4px;cursor:pointer;font-size:13px;color:var(--accent-light)}
+        .profile-dropdown .p-add:hover{color:var(--accent-hover)}
+        .nav-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.02);border-radius:8px;padding:3px;border:1px solid var(--border-subtle)}
+        .nav-tab{padding:7px 14px;border-radius:6px;border:none;background:none;color:var(--text-muted);cursor:pointer;font-size:13px;font-weight:500;transition:all 0.15s;font-family:inherit}
+        .nav-tab.active{background:rgba(255,255,255,0.06);color:var(--text-primary)}
+        .nav-tab:hover:not(.active){color:var(--text-secondary)}
+        .tab-content{display:none}.tab-content.active{display:block}
+        .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+        .stat-card{background:rgba(255,255,255,0.02);border:1px solid var(--border-standard);border-radius:12px;padding:20px}
+        .stat-card .label{font-size:12px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+        .stat-card .value{font-size:28px;font-weight:600;color:var(--text-primary);letter-spacing:-0.5px}
+        .stat-card .value.green{color:var(--green-soft)}.stat-card .value.red{color:var(--red)}.stat-card .value.yellow{color:var(--yellow)}.stat-card .value.blue{color:var(--accent-light)}
+        .card{background:rgba(255,255,255,0.02);border:1px solid var(--border-standard);border-radius:12px;padding:24px;margin-bottom:16px}
+        .card:hover{border-color:var(--border-strong)}
+        .card h2{font-size:16px;font-weight:600;color:var(--text-primary);margin-bottom:16px;letter-spacing:-0.24px}
+        table{width:100%;border-collapse:collapse}
+        th{text-align:left;padding:10px 12px;font-size:11px;font-weight:500;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border-subtle)}
+        td{padding:12px;font-size:14px;color:var(--text-secondary);border-bottom:1px solid var(--border-subtle)}
+        tr:last-child td{border-bottom:none}tr:hover td{background:rgba(255,255,255,0.02)}
+        .badge{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:9999px;font-size:12px;font-weight:500}
+        .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+        .badge-green{background:rgba(16,185,129,0.12);color:var(--green-soft)}
+        .badge-red{background:rgba(239,68,68,0.12);color:var(--red)}
+        .badge-yellow{background:rgba(234,179,8,0.12);color:var(--yellow)}
+        .badge-blue{background:rgba(94,106,210,0.12);color:var(--accent-light)}
+        .btn{padding:8px 16px;border-radius:6px;border:none;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:inherit}
+        .btn-primary{background:var(--accent);color:var(--text-primary)}.btn-primary:hover{background:var(--accent-hover)}
+        .btn-ghost{background:rgba(255,255,255,0.02);color:var(--text-secondary);border:1px solid var(--border-standard)}
+        .btn-ghost:hover{background:rgba(255,255,255,0.05);color:var(--text-primary)}
+        .btn-danger{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.2)}.btn-danger:hover{background:rgba(239,68,68,0.2)}
+        .btn-sm{padding:6px 12px;font-size:12px}
+        .form-group{margin-bottom:16px}
+        .form-group label{display:block;font-size:12px;font-weight:500;color:var(--text-tertiary);margin-bottom:6px}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--border-standard);border-radius:6px;color:var(--text-primary);font-size:14px;font-family:inherit}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(94,106,210,0.2)}
+        .form-group input::placeholder{color:var(--text-muted)}
+        .form-group textarea{min-height:200px;resize:vertical}
+        .form-group select{cursor:pointer}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .btn-row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+        .schedule-info{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(94,106,210,0.06);border:1px solid rgba(94,106,210,0.12);border-radius:8px;margin-bottom:16px}
+        .schedule-info .dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+        .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;background:var(--bg-surface);border:1px solid var(--border-standard);border-radius:8px;font-size:13px;color:var(--text-secondary);box-shadow:0 4px 16px rgba(0,0,0,0.4);z-index:1000;transform:translateY(20px);opacity:0;transition:all 0.2s ease;max-width:320px}
+        .toast.show{transform:translateY(0);opacity:1}
+        .empty-state{text-align:center;padding:48px 24px;color:var(--text-muted);font-size:14px}
+        .loading{opacity:0.5;pointer-events:none}
+        .checkbox-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+        .check-item{display:flex;align-items:flex-start;gap:8px;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid var(--border-standard);border-radius:8px;cursor:pointer;font-size:14px;color:var(--text-secondary)}
+        .check-item input{margin-top:3px;cursor:pointer;accent-color:var(--accent)}
+        .radio-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.02);border:1px solid var(--border-standard);border-radius:8px;cursor:pointer;margin-bottom:8px}
+        .radio-card.selected{border-color:var(--accent);background:rgba(94,106,210,0.06)}
+        .radio-card .r-title{font-weight:600;font-size:14px;color:var(--text-primary)}.radio-card .r-desc{font-size:12px;color:var(--text-tertiary);margin-top:2px}
+        .hint{font-size:12px;color:var(--text-muted);margin-top:-8px;margin-bottom:12px}
+        .cred-note{font-size:12px;color:var(--yellow);margin-bottom:12px}
+        .advanced-toggle{display:flex;align-items:center;gap:8px;padding:12px 0;cursor:pointer;color:var(--text-tertiary);font-size:13px;font-weight:500;user-select:none}
+        .advanced-toggle:hover{color:var(--text-secondary)}
+        .advanced-toggle .arrow{transition:transform 0.15s;font-size:10px}
+        .advanced-toggle .arrow.open{transform:rotate(90deg)}
+        .advanced-content{display:none}.advanced-content.show{display:block}
+        .autocomplete-wrap{position:relative}
+        .autocomplete-list{display:none;position:absolute;top:calc(100% + 2px);left:0;right:0;max-height:200px;overflow-y:auto;background:var(--bg-surface);border:1px solid var(--border-standard);border-radius:6px;z-index:150;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
+        .autocomplete-list.show{display:block}
+        .autocomplete-item{padding:8px 12px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+        .autocomplete-item:hover{background:rgba(255,255,255,0.04);color:var(--text-primary)}
+        .login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--bg-deep)}
+        .login-card{background:rgba(255,255,255,0.02);border:1px solid var(--border-standard);border-radius:12px;padding:40px;width:100%;max-width:380px;text-align:center}
+        .login-card h1{font-size:24px;font-weight:600;color:var(--text-primary);margin-bottom:8px;letter-spacing:-0.5px}
+        .login-card p{font-size:13px;color:var(--text-tertiary);margin-bottom:24px}
+        .login-card .login-error{font-size:13px;color:var(--red);margin-top:8px;display:none}
+        #app-container{display:none}#app-container.authenticated{display:block}
+        @media(max-width:768px){
+            header{flex-direction:column;gap:12px;padding:12px 16px}
+            .header-right{width:100%;justify-content:space-between}
+            .nav-tabs{width:100%;overflow-x:auto}
+            .container{padding:16px}
+            .stats-row{grid-template-columns:1fr 1fr}
+            .form-row{grid-template-columns:1fr}
+            .card{padding:16px}
+            table{display:block;overflow-x:auto}
+        }
+        @media(max-width:480px){
+            .stats-row{grid-template-columns:1fr}
+            .nav-tabs{flex-wrap:wrap}
+            .nav-tab{padding:6px 10px;font-size:12px}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="login-screen" class="login-screen">
+    <div class="login-card">
+        <h1>Job Hunter</h1>
+        <p>Enter your access code to continue</p>
+        <div class="form-group" style="text-align:left">
+            <label>Access Code</label>
+            <input type="password" id="access-code-input" placeholder="Enter access code" onkeydown="if(event.key==='Enter')attemptLogin()">
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="attemptLogin()">Unlock</button>
+        <div class="login-error" id="login-error">Invalid access code</div>
+    </div>
+</div>
+
+<!-- Main App -->
+<div id="app-container">
+    <header>
+        <h1>Job Hunter</h1>
+        <div class="header-right">
+            <div class="nav-tabs" id="nav-tabs">
+                <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+                <button class="nav-tab" data-tab="jobs">Jobs</button>
+                <button class="nav-tab" data-tab="applications">Applications</button>
+                <button class="nav-tab" data-tab="settings">Settings</button>
+            </div>
+            <div class="profile-selector">
+                <button class="profile-btn" id="profile-btn" onclick="toggleProfileDropdown()">
+                    <span id="current-profile-name">Loading...</span>
+                    <span style="font-size:10px">&#9662;</span>
+                </button>
+                <div class="profile-dropdown" id="profile-dropdown"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard -->
+        <div class="tab-content active" id="tab-dashboard">
+            <div class="stats-row" id="stats-row"></div>
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+                    <h2 style="margin-bottom:0">Schedule</h2>
+                    <div style="display:flex;gap:8px">
+                        <button class="btn btn-ghost" onclick="testRun()">Test Run</button>
+                        <button class="btn btn-primary" onclick="runPipeline()">Run Now</button>
+                    </div>
+                </div>
+                <div class="schedule-info"><div class="dot"></div><span id="schedule-text">Loading...</span></div>
+                <div class="form-row" style="max-width:300px">
+                    <div class="form-group"><label>Hour (0-23)</label><input type="number" id="sched-hour" min="0" max="23" value="8"></div>
+                    <div class="form-group"><label>Minute (0-59)</label><input type="number" id="sched-min" min="0" max="59" value="0"></div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="updateSchedule()">Update Schedule</button>
+            </div>
+            <div class="card">
+                <h2>Recent Applications</h2>
+                <table><thead><tr><th>Job</th><th>Company</th><th>Contact</th><th>Apply</th><th>Outreach</th><th>Date</th></tr></thead><tbody id="recent-apps"></tbody></table>
+            </div>
+        </div>
+
+        <!-- Jobs -->
+        <div class="tab-content" id="tab-jobs">
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+                    <h2 style="margin-bottom:0">Scraped Jobs</h2>
+                    <button class="btn btn-primary btn-sm" onclick="scrapeJobs()">Scrape Now</button>
+                </div>
+                <table><thead><tr><th>Title</th><th>Company</th><th>Location</th><th>Score</th><th>Status</th></tr></thead><tbody id="jobs-table"></tbody></table>
+            </div>
+        </div>
+
+        <!-- Applications -->
+        <div class="tab-content" id="tab-applications">
+            <div class="card">
+                <h2>All Applications</h2>
+                <table><thead><tr><th>Job</th><th>Company</th><th>Contact</th><th>Apply</th><th>Outreach</th><th>Method</th><th>Date</th></tr></thead><tbody id="all-apps-table"></tbody></table>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="tab-content" id="tab-settings">
+            <div class="card">
+                <h2>Candidate Profile</h2>
+                <div class="form-row">
+                    <div class="form-group"><label>Full Name</label><input type="text" id="set-name" placeholder="John Smith"></div>
+                    <div class="form-group"><label>Email</label><input type="email" id="set-email" placeholder="john@email.com"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Phone</label><input type="text" id="set-phone" placeholder="+1-555-123-4567"></div>
+                    <div class="form-group"><label>Location</label><div class="autocomplete-wrap"><input type="text" id="set-location" placeholder="Vancouver, BC" autocomplete="off"><div class="autocomplete-list" id="location-autocomplete"></div></div></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>LinkedIn URL</label><input type="text" id="set-linkedin" placeholder="https://linkedin.com/in/..."></div>
+                    <div class="form-group"><label>Target Title</label><input type="text" id="set-title-target" placeholder="Project Manager"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Job Search</h2>
+                <div class="form-group">
+                    <label>Job Titles (comma-separated)</label>
+                    <div class="autocomplete-wrap"><input type="text" id="set-titles" placeholder="Project Manager, Senior PM, Program Manager" autocomplete="off"><div class="autocomplete-list" id="titles-autocomplete"></div></div>
+                    <div class="hint" id="titles-hint"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Locations (comma-separated)</label><div class="autocomplete-wrap"><input type="text" id="set-locations" placeholder="Remote, Vancouver, BC" autocomplete="off"><div class="autocomplete-list" id="locations-autocomplete"></div></div></div>
+                    <div class="form-group"><label>Jobs Per Day</label><input type="number" id="set-jobs-per-day" value="10"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Max Hours Old</label><input type="number" id="set-hours-old" value="24"></div>
+                    <div class="form-group"><label>Min Salary (0 to disable)</label><input type="number" id="set-min-salary" value="0"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Region</label>
+                        <select id="set-region">
+                            <option value="us">United States</option><option value="uk">United Kingdom</option><option value="ca">Canada</option>
+                            <option value="au">Australia</option><option value="de">Germany</option><option value="fr">France</option>
+                            <option value="in">India</option><option value="br">Brazil</option><option value="nl">Netherlands</option>
+                            <option value="sg">Singapore</option><option value="ae">UAE</option><option value="za">South Africa</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Distance (miles)</label><input type="number" id="set-distance" value="25"></div>
+                </div>
+                <div class="form-group"><label>Platforms to search</label><div class="checkbox-grid" id="platforms-grid"></div></div>
+            </div>
+
+            <div class="card">
+                <h2>Resume Mode</h2>
+                <p class="hint">How the AI tailors your resume to each job.</p>
+                <label class="radio-card" id="mode-honest-card"><input type="radio" name="resume-mode" value="honest" checked><span><div class="r-title">Honest</div><div class="r-desc">Optimizes existing experience only. Never adds skills you don't have.</div></span></label>
+                <label class="radio-card" id="mode-enhanced-card"><input type="radio" name="resume-mode" value="enhanced"><span><div class="r-title">Enhanced</div><div class="r-desc">Strategically adds relevant skills and plausible metrics to maximize callbacks.</div></span></label>
+            </div>
+
+            <div class="card">
+                <h2>Resume & Cover Letter</h2>
+                <div class="form-group"><label>Resume Template (Markdown)</label><textarea id="set-resume" placeholder="Paste your resume in markdown..."></textarea></div>
+                <div class="form-group"><label>Cover Letter Template (Markdown)</label><textarea id="set-cover" placeholder="Paste your cover letter template..."></textarea></div>
+            </div>
+
+            <!-- Advanced Settings (hidden by default) -->
+            <div class="advanced-toggle" onclick="toggleAdvanced()">
+                <span class="arrow" id="adv-arrow">&#9654;</span> Advanced Settings (LLM, Email, Platform Credentials)
+            </div>
+            <div class="advanced-content" id="advanced-content">
+                <div class="card">
+                    <h2>LLM Configuration</h2>
+                    <div class="form-row">
+                        <div class="form-group"><label>API Base URL</label><input type="text" id="set-llm-base" placeholder="https://openrouter.ai/api/v1"></div>
+                        <div class="form-group"><label>Model</label><input type="text" id="set-llm-model" placeholder="openai/gpt-4o-mini"></div>
+                    </div>
+                    <div class="form-group"><label>API Key</label><input type="password" id="set-llm-key" placeholder="sk-..."></div>
+                </div>
+                <div class="card">
+                    <h2>Email (Gmail SMTP)</h2>
+                    <div class="form-row">
+                        <div class="form-group"><label>From Name</label><input type="text" id="set-email-name" placeholder="John Smith"></div>
+                        <div class="form-group"><label>From Email</label><input type="email" id="set-email-from" placeholder="john@gmail.com"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>SMTP Host</label><input type="text" id="set-smtp-host" placeholder="smtp.gmail.com"></div>
+                        <div class="form-group"><label>SMTP Port</label><input type="number" id="set-smtp-port" value="587"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Username</label><input type="text" id="set-email-user" placeholder="john@gmail.com"></div>
+                        <div class="form-group"><label>App Password</label><input type="password" id="set-email-pass" placeholder="16-char app password"></div>
+                    </div>
+                    <div class="form-group"><label>Email Signature</label><textarea id="set-email-sig" style="min-height:80px" placeholder="Best regards,\nJohn Smith"></textarea></div>
+                </div>
+                <div class="card">
+                    <h2>Platform Credentials</h2>
+                    <p class="cred-note">Used to log in and submit applications on platforms that require it.</p>
+                    <div id="credentials-container"></div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="saveAllSettings()">Save All Settings</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------------------------------------------------------------------------
+// State
+// ---------------------------------------------------------------------------
+const API = window.location.origin;
+let TOKEN = localStorage.getItem('jh_token') || null;
+let currentProfileId = parseInt(localStorage.getItem('jh_profile_id')) || 1;
+let profiles = [];
+let templates = [];
+let platforms = [];
+
+// City database for autocomplete
+const CITIES = [
+    "Remote","New York, NY","Los Angeles, CA","Chicago, IL","Houston, TX","Phoenix, AZ",
+    "Philadelphia, PA","San Antonio, TX","San Diego, CA","Dallas, TX","San Jose, CA",
+    "Austin, TX","Jacksonville, FL","Fort Worth, TX","Columbus, OH","Charlotte, NC",
+    "Indianapolis, IN","San Francisco, CA","Seattle, WA","Denver, CO","Nashville, TN",
+    "Oklahoma City, OK","Washington, DC","El Paso, TX","Las Vegas, NV","Boston, MA",
+    "Portland, OR","Memphis, TN","Louisville, KY","Baltimore, MD","Milwaukee, WI",
+    "Albuquerque, NM","Tucson, AZ","Fresno, CA","Sacramento, CA","Mesa, AZ",
+    "Kansas City, MO","Atlanta, GA","Omaha, NE","Colorado Springs, CO","Raleigh, NC",
+    "Long Beach, CA","Virginia Beach, VA","Miami, FL","Oakland, CA","Minneapolis, MN",
+    "Tampa, FL","Tulsa, OK","Arlington, TX","New Orleans, LA","Wichita, KS",
+    "Cleveland, OH","Bakersfield, CA","Aurora, CO","Anaheim, CA","Honolulu, HI",
+    "Santa Ana, CA","Riverside, CA","Corpus Christi, TX","Lexington, KY","Pittsburgh, PA",
+    "Anchorage, AK","Stockton, CA","Cincinnati, OH","St. Paul, MN","Toledo, OH",
+    "Newark, NJ","Greensboro, NC","Buffalo, NY","Plano, TX","Lincoln, NE",
+    "Henderson, NV","Fort Wayne, IN","Jersey City, NJ","St. Petersburg, FL","Chula Vista, CA",
+    "Norfolk, VA","Orlando, FL","Chandler, AZ","Laredo, TX","Madison, WI",
+    "Winston-Salem, NC","Lubbock, TX","Baton Rouge, LA","Durham, NC","Garland, TX",
+    "Glendale, AZ","Reno, NV","Hialeah, FL","Chesapeake, VA","Scottsdale, AZ",
+    "North Las Vegas, NV","Irving, TX","Fremont, CA","Irvine, CA","Birmingham, AL",
+    "Rochester, NY","San Bernardino, CA","Spokane, WA","Gilbert, AZ","Montgomery, AL",
+    "Boise, ID","Richmond, VA","Des Moines, IA","Tacoma, WA","Shreveport, LA",
+    "Akron, OH","Arlington, VA","Mobile, AL","Little Rock, AR","Detroit, MI",
+    "Grand Rapids, MI","Overland Park, KS","Tallahassee, FL","Salt Lake City, UT",
+    "Huntsville, AL","Worcester, MA","Knoxville, TX","Grand Prairie, TX","Brownsville, TX",
+    "Vancouver, BC","Toronto, ON","Montreal, QC","Calgary, AB","Ottawa, ON",
+    "Edmonton, AB","Winnipeg, MB","Halifax, NS","Victoria, BC","London, ON",
+    "Manchester","Birmingham","London","Leeds","Glasgow","Liverpool","Bristol",
+    "Sheffield","Edinburgh","Leicester","Sydney","Melbourne","Brisbane","Perth",
+    "Adelaide","Gold Coast","Canberra","Berlin","Munich","Hamburg","Frankfurt",
+    "Paris","Lyon","Marseille","Amsterdam","Rotterdam","The Hague","Singapore",
+    "Dubai","Abu Dhabi","Mumbai","Delhi","Bangalore","São Paulo","Rio de Janeiro"
+];
+
+// ---------------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------------
+async function checkAuth() {
+    try {
+        const resp = await fetch(`${API}/api/auth/status`);
+        const data = await resp.json();
+        if (!data.required) {
+            showApp();
+            return;
+        }
+        if (TOKEN) {
+            // Verify token is still valid
+            const test = await fetch(`${API}/api/profiles`, { headers: authHeaders() });
+            if (test.ok) { showApp(); return; }
+            TOKEN = null;
+            localStorage.removeItem('jh_token');
+        }
+        showLogin();
+    } catch(e) {
+        showLogin();
+    }
+}
+
+function showLogin() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app-container').classList.remove('authenticated');
+}
+
+function showApp() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-container').classList.add('authenticated');
+    initApp();
+}
+
+async function attemptLogin() {
+    const code = document.getElementById('access-code-input').value;
+    const err = document.getElementById('login-error');
+    err.style.display = 'none';
+    try {
+        const resp = await fetch(`${API}/api/auth/verify`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({access_code: code})
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            TOKEN = data.token;
+            localStorage.setItem('jh_token', TOKEN);
+            showApp();
+        } else {
+            err.style.display = 'block';
+        }
+    } catch(e) {
+        err.textContent = 'Connection error';
+        err.style.display = 'block';
+    }
+}
+
+function authHeaders() {
+    const h = {'Content-Type': 'application/json'};
+    if (TOKEN) h['Authorization'] = `Bearer ${TOKEN}`;
+    return h;
+}
+
+// ---------------------------------------------------------------------------
+// App Init
+// ---------------------------------------------------------------------------
+async function initApp() {
+    await Promise.all([loadProfiles(), loadTemplates(), loadPlatforms()]);
+    await loadDashboard();
+    setupNavigation();
+    setupAutocomplete();
+    setupRadioCards();
+}
+
+// ---------------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------------
+function setupNavigation() {
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+            if (tab.dataset.tab === 'dashboard') loadDashboard();
+            if (tab.dataset.tab === 'jobs') loadJobs();
+            if (tab.dataset.tab === 'applications') loadApplications();
+            if (tab.dataset.tab === 'settings') loadSettings();
+        });
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Profiles
+// ---------------------------------------------------------------------------
+async function loadProfiles() {
+    try {
+        const resp = await fetch(`${API}/api/profiles`, { headers: authHeaders() });
+        if (resp.ok) profiles = await resp.json();
+    } catch(e) {}
+    renderProfileDropdown();
+}
+
+function renderProfileDropdown() {
+    const current = profiles.find(p => p.id === currentProfileId);
+    document.getElementById('current-profile-name').textContent = current ? current.name : 'Select Profile';
+    const dd = document.getElementById('profile-dropdown');
+    dd.innerHTML = profiles.map(p =>
+        `<div class="p-item ${p.id === currentProfileId ? 'active' : ''}" onclick="selectProfile(${p.id})">${p.name}<span style="font-size:11px;color:var(--text-muted)">${p.role_template}</span></div>`
+    ).join('') + `<div class="p-add" onclick="createNewProfile()">+ New Profile</div>`;
+}
+
+function toggleProfileDropdown() {
+    document.getElementById('profile-dropdown').classList.toggle('show');
+}
+
+function selectProfile(id) {
+    currentProfileId = id;
+    localStorage.setItem('jh_profile_id', id);
+    document.getElementById('profile-dropdown').classList.remove('show');
+    renderProfileDropdown();
+    loadDashboard();
+}
+
+async function createNewProfile() {
+    const name = prompt('Profile name:');
+    if (!name) return;
+    const template = prompt('Role template (corporate-pm, healthcare, engineering, education, creative, general):', 'general');
+    if (!template) return;
+    try {
+        const resp = await fetch(`${API}/api/profiles`, {
+            method: 'POST', headers: authHeaders(),
+            body: JSON.stringify({name, role_template: template})
+        });
+        if (resp.ok) {
+            await loadProfiles();
+            toast('Profile created');
+        }
+    } catch(e) { toast('Failed to create profile'); }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.profile-selector')) {
+        document.getElementById('profile-dropdown').classList.remove('show');
+    }
+});
+
+// ---------------------------------------------------------------------------
+// Templates
+// ---------------------------------------------------------------------------
+async function loadTemplates() {
+    try {
+        const resp = await fetch(`${API}/api/templates`, { headers: authHeaders() });
+        if (resp.ok) templates = await resp.json();
+    } catch(e) {}
+}
+
+// ---------------------------------------------------------------------------
+// Platforms
+// ---------------------------------------------------------------------------
+async function loadPlatforms() {
+    try {
+        const resp = await fetch(`${API}/api/platforms`, { headers: authHeaders() });
+        if (resp.ok) platforms = await resp.json();
+    } catch(e) {}
+}
+
+// ---------------------------------------------------------------------------
+// Dashboard
+// ---------------------------------------------------------------------------
+async function loadDashboard() {
+    try {
+        const [statsResp, appsResp, schedResp] = await Promise.all([
+            fetch(`${API}/api/applications/stats?profile_id=${currentProfileId}`, { headers: authHeaders() }),
+            fetch(`${API}/api/applications?limit=10&profile_id=${currentProfileId}`, { headers: authHeaders() }),
+            fetch(`${API}/api/schedule?profile_id=${currentProfileId}`, { headers: authHeaders() })
+        ]);
+        if (!statsResp.ok) return;
+        const stats = await statsResp.json();
+        document.getElementById('stats-row').innerHTML = `
+            <div class="stat-card"><div class="label">Jobs Scraped</div><div class="value blue">${stats.total_jobs_scraped}</div></div>
+            <div class="stat-card"><div class="label">Applications Sent</div><div class="value green">${stats.applied}</div></div>
+            <div class="stat-card"><div class="label">Outreach Sent</div><div class="value">${stats.outreach_sent}</div></div>
+            <div class="stat-card"><div class="label">Failed</div><div class="value red">${stats.failed}</div></div>
+        `;
+        if (appsResp.ok) {
+            const apps = await appsResp.json();
+            const tbody = document.getElementById('recent-apps');
+            if (apps.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No applications yet</td></tr>';
+            } else {
+                tbody.innerHTML = apps.map(a => `
+                    <tr>
+                        <td>${esc(a.title)}</td><td>${esc(a.company)}</td><td>${esc(a.contact_name)}</td>
+                        <td><span class="badge ${badgeClass(a.apply_status)}">${a.apply_status}</span></td>
+                        <td><span class="badge ${badgeClass(a.outreach_status)}">${a.outreach_status}</span></td>
+                        <td style="color:var(--text-muted);font-size:12px">${a.created_at ? a.created_at.split('T')[0] : ''}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+        if (schedResp.ok) {
+            const sched = await schedResp.json();
+            document.getElementById('schedule-text').textContent = sched.enabled ? `Daily at ${String(sched.hour).padStart(2,'0')}:${String(sched.minute).padStart(2,'0')} — Next: ${sched.next_run || 'pending'}` : 'Schedule disabled';
+            document.getElementById('sched-hour').value = sched.hour || 8;
+            document.getElementById('sched-min').value = sched.minute || 0;
+        }
+    } catch(e) { console.error('Dashboard load failed:', e); }
+}
+
+// ---------------------------------------------------------------------------
+// Jobs
+// ---------------------------------------------------------------------------
+async function loadJobs() {
+    try {
+        const resp = await fetch(`${API}/api/jobs?limit=50&profile_id=${currentProfileId}`, { headers: authHeaders() });
+        if (!resp.ok) return;
+        const jobs = await resp.json();
+        const tbody = document.getElementById('jobs-table');
+        if (jobs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No jobs scraped yet. Click "Scrape Now" to start.</td></tr>';
+        } else {
+            tbody.innerHTML = jobs.map(j => `
+                <tr>
+                    <td>${j.job_url ? `<a href="${esc(j.job_url)}" target="_blank" style="color:var(--accent-light);text-decoration:none">${esc(j.title)}</a>` : esc(j.title)}</td>
+                    <td>${esc(j.company)}</td><td>${esc(j.location)}</td>
+                    <td style="color:${j.relevance_score >= 50 ? 'var(--green-soft)' : j.relevance_score >= 20 ? 'var(--yellow)' : 'var(--text-muted)'}">${j.relevance_score}</td>
+                    <td><span class="badge ${j.status === 'new' ? 'badge-blue' : j.status === 'applied' ? 'badge-green' : 'badge-yellow'}">${j.status}</span></td>
+                </tr>
+            `).join('');
+        }
+    } catch(e) {}
+}
+
+// ---------------------------------------------------------------------------
+// Applications
+// ---------------------------------------------------------------------------
+async function loadApplications() {
+    try {
+        const resp = await fetch(`${API}/api/applications?limit=100&profile_id=${currentProfileId}`, { headers: authHeaders() });
+        if (!resp.ok) return;
+        const apps = await resp.json();
+        const tbody = document.getElementById('all-apps-table');
+        if (apps.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No applications yet</td></tr>';
+        } else {
+            tbody.innerHTML = apps.map(a => `
+                <tr>
+                    <td>${esc(a.title)}</td><td>${esc(a.company)}</td><td>${esc(a.contact_name)}</td>
+                    <td><span class="badge ${badgeClass(a.apply_status)}">${a.apply_status}</span></td>
+                    <td><span class="badge ${badgeClass(a.outreach_status)}">${a.outreach_status}</span></td>
+                    <td style="font-size:12px;color:var(--text-muted)">${esc(a.apply_method)}</td>
+                    <td style="font-size:12px;color:var(--text-muted)">${a.created_at ? a.created_at.split('T')[0] : ''}</td>
+                </tr>
+            `).join('');
+        }
+    } catch(e) {}
+}
+
+// ---------------------------------------------------------------------------
+// Settings
+// ---------------------------------------------------------------------------
+async function loadSettings() {
+    try {
+        const resp = await fetch(`${API}/api/settings?profile_id=${currentProfileId}`, { headers: authHeaders() });
+        if (!resp.ok) return;
+        const s = await resp.json();
+        const c = s.candidate || {};
+        const sc = s.search || {};
+        const llm = s.llm || {};
+        const em = s.email || {};
+        document.getElementById('set-name').value = c.name || '';
+        document.getElementById('set-email').value = c.email || '';
+        document.getElementById('set-phone').value = c.phone || '';
+        document.getElementById('set-location').value = c.location || '';
+        document.getElementById('set-linkedin').value = c.linkedin || '';
+        document.getElementById('set-title-target').value = c.title_target || '';
+        document.getElementById('set-titles').value = (sc.job_titles || []).join(', ');
+        document.getElementById('set-locations').value = (sc.locations || []).join(', ');
+        document.getElementById('set-jobs-per-day').value = sc.jobs_per_day || 10;
+        document.getElementById('set-hours-old').value = sc.hours_old || 24;
+        document.getElementById('set-min-salary').value = sc.min_salary || 0;
+        document.getElementById('set-region').value = sc.region || 'us';
+        document.getElementById('set-distance').value = sc.distance_miles || 25;
+        document.getElementById('set-resume').value = s.base_resume || '';
+        document.getElementById('set-cover').value = s.base_cover_letter || '';
+        // LLM
+        document.getElementById('set-llm-base').value = llm.api_base || '';
+        document.getElementById('set-llm-model').value = llm.model || '';
+        document.getElementById('set-llm-key').value = '';
+        if (llm.api_key_masked) document.getElementById('set-llm-key').placeholder = llm.api_key_masked;
+        // Email
+        document.getElementById('set-email-name').value = em.from_name || '';
+        document.getElementById('set-email-from').value = em.from_email || '';
+        document.getElementById('set-smtp-host').value = em.smtp_host || 'smtp.gmail.com';
+        document.getElementById('set-smtp-port').value = em.smtp_port || 587;
+        document.getElementById('set-email-user').value = em.username || '';
+        document.getElementById('set-email-pass').value = '';
+        document.getElementById('set-email-sig').value = em.signature || '';
+        // Resume mode
+        const mode = s.resume_mode || 'honest';
+        document.querySelector(`input[name="resume-mode"][value="${mode}"]`).checked = true;
+        document.getElementById('mode-honest-card').classList.toggle('selected', mode === 'honest');
+        document.getElementById('mode-enhanced-card').classList.toggle('selected', mode === 'enhanced');
+        // Platforms
+        renderPlatforms(sc.platforms || ['linkedin','indeed','glassdoor','google']);
+        // Credentials
+        renderCredentials(s.platform_credentials || {});
+    } catch(e) { console.error('Settings load failed:', e); }
+}
+
+function renderPlatforms(selected) {
+    const grid = document.getElementById('platforms-grid');
+    grid.innerHTML = platforms.map(p =>
+        `<label class="check-item"><input type="checkbox" value="${p.id}" ${selected.includes(p.id) ? 'checked' : ''}> ${p.name}${p.needs_login ? ' <span style="color:var(--yellow);font-size:11px">*</span>' : ''}</label>`
+    ).join('');
+}
+
+function renderCredentials(creds) {
+    const container = document.getElementById('credentials-container');
+    const needsLogin = platforms.filter(p => p.needs_login);
+    container.innerHTML = needsLogin.map(p => {
+        const c = creds[p.id] || {};
+        return `<div style="margin-bottom:16px">
+            <div style="font-weight:600;font-size:14px;color:var(--text-primary);margin-bottom:8px">${p.name}</div>
+            <div class="form-row">
+                <div class="form-group"><label>Email</label><input type="text" id="cred-${p.id}-email" value="${esc(c.email || '')}" placeholder="${p.name} email"></div>
+                <div class="form-group"><label>Password</label><input type="password" id="cred-${p.id}-pass" placeholder="${c.password_set ? 'Password saved (leave blank to keep)' : p.name + ' password'}"></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function saveAllSettings() {
+    const selectedPlatforms = Array.from(document.querySelectorAll('#platforms-grid input:checked')).map(cb => cb.value);
+    const creds = {};
+    platforms.filter(p => p.needs_login).forEach(p => {
+        const email = document.getElementById(`cred-${p.id}-email`)?.value || '';
+        const pass = document.getElementById(`cred-${p.id}-pass`)?.value || '';
+        if (email || pass) creds[p.id] = { email, password: pass };
+    });
+    const body = {
+        candidate: {
+            name: document.getElementById('set-name').value,
+            email: document.getElementById('set-email').value,
+            phone: document.getElementById('set-phone').value,
+            location: document.getElementById('set-location').value,
+            linkedin: document.getElementById('set-linkedin').value,
+            title_target: document.getElementById('set-title-target').value
+        },
+        search: {
+            job_titles: document.getElementById('set-titles').value.split(',').map(s => s.trim()).filter(Boolean),
+            locations: document.getElementById('set-locations').value.split(',').map(s => s.trim()).filter(Boolean),
+            jobs_per_day: parseInt(document.getElementById('set-jobs-per-day').value) || 10,
+            hours_old: parseInt(document.getElementById('set-hours-old').value) || 24,
+            min_salary: parseInt(document.getElementById('set-min-salary').value) || 0,
+            region: document.getElementById('set-region').value,
+            distance_miles: parseInt(document.getElementById('set-distance').value) || 25,
+            platforms: selectedPlatforms
+        },
+        resume_mode: document.querySelector('input[name="resume-mode"]:checked')?.value || 'honest',
+        base_resume: document.getElementById('set-resume').value,
+        base_cover_letter: document.getElementById('set-cover').value,
+        platform_credentials: creds
+    };
+    // LLM (only send if key is filled)
+    const llmKey = document.getElementById('set-llm-key').value;
+    const llm = {
+        api_base: document.getElementById('set-llm-base').value,
+        model: document.getElementById('set-llm-model').value
+    };
+    if (llmKey) llm.api_key = llmKey;
+    body.llm = llm;
+    // Email
+    const emailPass = document.getElementById('set-email-pass').value;
+    const emailBody = {
+        from_name: document.getElementById('set-email-name').value,
+        from_email: document.getElementById('set-email-from').value,
+        smtp_host: document.getElementById('set-smtp-host').value,
+        smtp_port: parseInt(document.getElementById('set-smtp-port').value) || 587,
+        username: document.getElementById('set-email-user').value,
+        signature: document.getElementById('set-email-sig').value
+    };
+    if (emailPass) emailBody.password = emailPass;
+    body.email = emailBody;
+
+    try {
+        const resp = await fetch(`${API}/api/profiles/${currentProfileId}/settings`, {
+            method: 'PUT', headers: authHeaders(), body: JSON.stringify(body)
+        });
+        if (resp.ok) toast('Settings saved');
+        else toast('Failed to save settings');
+    } catch(e) { toast('Failed to save settings'); }
+}
+
+// ---------------------------------------------------------------------------
+// Autocomplete
+// ---------------------------------------------------------------------------
+function setupAutocomplete() {
+    setupFieldAutocomplete('set-locations', 'location-autocomplete', CITIES);
+    setupFieldAutocomplete('set-locations', 'locations-autocomplete', CITIES);
+    setupTitlesAutocomplete();
+}
+
+function setupFieldAutocomplete(inputId, listId, items) {
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+    if (!input || !list) return;
+    input.addEventListener('input', () => {
+        const val = input.value.split(',').pop().trim().toLowerCase();
+        if (val.length < 1) { list.classList.remove('show'); return; }
+        const matches = items.filter(c => c.toLowerCase().includes(val)).slice(0, 8);
+        if (matches.length === 0) { list.classList.remove('show'); return; }
+        list.innerHTML = matches.map(m => `<div class="autocomplete-item">${highlightMatch(m, val)}</div>`).join('');
+        list.classList.add('show');
+        list.querySelectorAll('.autocomplete-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const parts = input.value.split(',');
+                parts[parts.length - 1] = ' ' + item.textContent.trim();
+                input.value = parts.join(',').replace(/^,/, '').trim();
+                list.classList.remove('show');
+            });
+        });
+    });
+    input.addEventListener('blur', () => setTimeout(() => list.classList.remove('show'), 200));
+}
+
+function setupTitlesAutocomplete() {
+    const input = document.getElementById('set-titles');
+    const list = document.getElementById('titles-autocomplete');
+    const hint = document.getElementById('titles-hint');
+    if (!input || !list) return;
+    input.addEventListener('input', () => {
+        const val = input.value.split(',').pop().trim().toLowerCase();
+        if (val.length < 1) { list.classList.remove('show'); return; }
+        const allTitles = getAllTemplateTitles();
+        const matches = allTitles.filter(t => t.toLowerCase().includes(val)).slice(0, 8);
+        if (matches.length === 0) { list.classList.remove('show'); return; }
+        list.innerHTML = matches.map(m => `<div class="autocomplete-item">${highlightMatch(m, val)}</div>`).join('');
+        list.classList.add('show');
+        list.querySelectorAll('.autocomplete-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const parts = input.value.split(',');
+                parts[parts.length - 1] = ' ' + item.textContent.trim();
+                input.value = parts.join(',').replace(/^,/, '').trim();
+                list.classList.remove('show');
+            });
+        });
+    });
+    input.addEventListener('blur', () => setTimeout(() => list.classList.remove('show'), 200));
+}
+
+function getAllTemplateTitles() {
+    const titles = new Set();
+    templates.forEach(t => (t.default_job_titles || []).forEach(j => titles.add(j)));
+    return Array.from(titles);
+}
+
+function highlightMatch(text, query) {
+    const idx = text.toLowerCase().indexOf(query);
+    if (idx === -1) return esc(text);
+    return esc(text.substring(0, idx)) + '<span style="color:var(--accent-light)">' + esc(text.substring(idx, idx + query.length)) + '</span>' + esc(text.substring(idx + query.length));
+}
+
+// ---------------------------------------------------------------------------
+// Radio cards
+// ---------------------------------------------------------------------------
+function setupRadioCards() {
+    document.querySelectorAll('.radio-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const radio = card.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+                document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+            }
+        });
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Pipeline actions
+// ---------------------------------------------------------------------------
+async function runPipeline() {
+    if (!confirm('Run the full pipeline for the current profile?')) return;
+    try {
+        const resp = await fetch(`${API}/api/pipeline/run`, {
+            method: 'POST', headers: authHeaders(),
+            body: JSON.stringify({profile_id: currentProfileId})
+        });
+        const data = await resp.json();
+        toast(`Pipeline: ${data.status}`);
+        setTimeout(loadDashboard, 2000);
+    } catch(e) { toast('Pipeline failed'); }
+}
+
+async function testRun() {
+    try {
+        const resp = await fetch(`${API}/api/pipeline/run`, {
+            method: 'POST', headers: authHeaders(),
+            body: JSON.stringify({profile_id: currentProfileId, simulate: true})
+        });
+        const data = await resp.json();
+        toast(`Test run: ${data.status}`);
+    } catch(e) { toast('Test run failed'); }
+}
+
+async function scrapeJobs() {
+    try {
+        const resp = await fetch(`${API}/api/pipeline/scrape?profile_id=${currentProfileId}`, {
+            method: 'POST', headers: authHeaders()
+        });
+        const data = await resp.json();
+        toast(`Scraped ${data.scraped} jobs, ${data.new} new`);
+        loadJobs();
+    } catch(e) { toast('Scrape failed'); }
+}
+
+async function updateSchedule() {
+    const hour = parseInt(document.getElementById('sched-hour').value);
+    const minute = parseInt(document.getElementById('sched-min').value);
+    try {
+        const resp = await fetch(`${API}/api/schedule?hour=${hour}&minute=${minute}`, {
+            method: 'PUT', headers: authHeaders()
+        });
+        if (resp.ok) { toast('Schedule updated'); loadDashboard(); }
+    } catch(e) { toast('Schedule update failed'); }
+}
+
+// ---------------------------------------------------------------------------
+// Advanced toggle
+// ---------------------------------------------------------------------------
+function toggleAdvanced() {
+    const content = document.getElementById('advanced-content');
+    const arrow = document.getElementById('adv-arrow');
+    content.classList.toggle('show');
+    arrow.classList.toggle('open');
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function badgeClass(status) {
+    if (['applied','sent','partial'].includes(status)) return 'badge-green';
+    if (['failed','error','blocked'].includes(status)) return 'badge-red';
+    if (['pending','simulated'].includes(status)) return 'badge-yellow';
+    return 'badge-blue';
+}
+function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ---------------------------------------------------------------------------
+// Bootstrap
+// ---------------------------------------------------------------------------
+checkAuth();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(py -3.12 -m venv .venv)",
+      "Bash(.venv/Scripts/python.exe --version)",
+      "Bash(.venv/Scripts/python.exe -m pip install --upgrade pip -q)",
+      "Bash(../.venv/Scripts/python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000 --log-level info)",
+      "Bash(netstat -ano)",
+      "Bash(tasklist /FI \"PID eq 1816\" /FO CSV)",
+      "Bash(tasklist /FI \"PID eq 8712\" /FO CSV)",
+      "Bash(.venv/Scripts/python.exe -c ' *)",
+      "Bash(../.venv/Scripts/python.exe -c ' *)"
+    ]
+  }
+}

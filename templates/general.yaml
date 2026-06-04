@@ -1,0 +1,57 @@
+name: "General / Any Field"
+description: "Catch-all template for any industry or role type"
+
+default_job_titles:
+  - "Manager"
+  - "Coordinator"
+  - "Specialist"
+  - "Analyst"
+  - "Administrator"
+  - "Associate"
+  - "Director"
+  - "Supervisor"
+  - "Team Lead"
+  - "Consultant"
+
+default_competencies:
+  - "Communication & Collaboration"
+  - "Problem Solving & Critical Thinking"
+  - "Organization & Time Management"
+  - "Microsoft Office Suite"
+  - "Data Analysis & Reporting"
+  - "Customer Service"
+  - "Process Improvement"
+  - "Team Leadership"
+  - "Project Coordination"
+  - "Adaptability & Learning Agility"
+
+default_resume_sections:
+  - "Professional Summary"
+  - "Core Competencies"
+  - "Professional Experience"
+  - "Education"
+  - "Certifications"
+
+ats_keywords:
+  - "communication"
+  - "leadership"
+  - "teamwork"
+  - "problem solving"
+  - "organization"
+  - "Microsoft Office"
+  - "data analysis"
+  - "customer service"
+  - "process improvement"
+  - "collaboration"
+  - "time management"
+  - "attention to detail"
+
+industry_context: "General professional roles. Emphasize transferable skills, adaptability, communication, and results. Quantify with any measurable outcomes available. Keep the tone professional and results-oriented."
+
+scoring_boost_keywords:
+  - "manager"
+  - "coordinator"
+  - "specialist"
+  - "analyst"
+  - "lead"
+  - "director"

@@ -1,0 +1,50 @@
+# Job Hunter — Cline Rules
+
+## Project Type
+Web application — FastAPI backend + static HTML frontend. Automated job application pipeline.
+
+## How to Run
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+Open http://localhost:8000 for the dashboard.
+
+## Key Architecture
+- `backend/main.py` — FastAPI app, API routes, APScheduler
+- `backend/database.py` — SQLite (settings, jobs, applications)
+- `backend/pipeline/` — scrape, contacts, customize, send modules
+- `frontend/index.html` — Single-file dashboard (HTML + CSS + JS)
+
+## Config Approach
+ALL configuration is through the web dashboard (Settings tab) and stored in SQLite.
+No config files to edit. No .env needed. No API keys in code.
+
+## LLM Integration
+- Uses OpenAI-compatible API (OpenRouter, OpenAI, etc.)
+- Configured via Settings tab: api_base, api_key, model
+- Called in `pipeline/customize.py`
+
+## Contact Finding
+- FREE, no API key needed
+- Searches DuckDuckGo for hiring manager names
+- Generates email permutations
+- Verifies via SMTP (no email sent, just handshake)
+- All in `pipeline/contacts.py`
+
+## Frontend Rules
+READ `FRONTEND-DESIGN.md` BEFORE writing any HTML/CSS. It has the exact color palette, type scale, component specs, and anti-slop rules. Linear-inspired dark dashboard. Inter font only. No gradients, no glassmorphism, no emoji, no decorative icons.
+
+## When Modifying
+- Keep pipeline modules independent — each can be tested alone
+- All persistent data goes in SQLite via `database.py`
+- Frontend is vanilla JS — no build step, no npm
+- API returns JSON, frontend renders it
+
+## Dependencies
+- fastapi, uvicorn, apscheduler — web server + scheduling
+- python-jobspy — job scraping
+- requests — API calls + web search
+- dnspython — MX record lookup for email verification
+- markdown2, weasyprint — PDF generation (optional)

@@ -1,0 +1,16 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+.tmp
+backend/jobhunter.db
+backend/.tmp
+test_output
+tests
+RESOURCES
+docs
+*.md
+!backend/requirements.txt
+.clinerules
+.vscode

@@ -1,0 +1,62 @@
+# Job Hunter Configuration
+# Fill in all fields before first run
+
+# ─── Candidate Profile ───────────────────────────────────
+candidate:
+  name: "FRIEND_NAME_HERE"
+  email: "friend@email.com"
+  phone: "+1-555-000-0000"
+  linkedin: "https://linkedin.com/in/friend-profile"
+  location: "City, State"
+  title_target: "Project Manager"
+
+# ─── Job Search Parameters ────────────────────────────────
+search:
+  job_titles:
+    - "Project Manager"
+    - "Senior Project Manager"
+    - "Program Manager"
+    - "Technical Project Manager"
+    - "IT Project Manager"
+  locations:
+    - "Remote"
+    - "New York, NY"
+  distance_miles: 25
+  hours_old: 24
+  jobs_per_day: 10
+  excluded_companies: []
+  min_salary: 80000
+
+# ─── LLM (for resume/cover letter customization) ─────────
+# Any OpenAI-compatible API works: OpenRouter, OpenAI, Anthropic, local
+llm:
+  api_base: "https://openrouter.ai/api/v1"
+  api_key: "OPENROUTER_API_KEY_HERE"
+  model: "openai/gpt-4o-mini"
+  max_tokens: 2000
+  temperature: 0.7
+
+# ─── Contact Finder ───────────────────────────────────────
+# Free, unlimited. No API key needed.
+# Searches the web for hiring manager names, guesses email
+# patterns, and verifies them via SMTP. Works automatically.
+
+# ─── Email (Gmail SMTP) ──────────────────────────────────
+email:
+  smtp_host: "smtp.gmail.com"
+  smtp_port: 587
+  username: "your.email@gmail.com"
+  password: "GMAIL_APP_PASSWORD_HERE"
+  from_name: "FRIEND_NAME_HERE"
+  from_email: "your.email@gmail.com"
+  signature: |
+    Best regards,
+    FRIEND_NAME_HERE
+    PHONE | LINKEDIN_URL
+
+# ─── Output ───────────────────────────────────────────────
+paths:
+  applications_log: "applications.log"
+  tmp_dir: ".tmp"
+  resume_template: "base_resume.md"
+  cover_letter_template: "base_cover_letter.md"

@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project temp files
+.tmp/
+applications.log
+
+# SQLite database (contains credentials — never commit)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3
+
+# Config (contains API keys — uncomment to exclude)
+# config.yaml
+
+# WeasyPrint cache
+*.woff2

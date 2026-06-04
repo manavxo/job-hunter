@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Hunter</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0f1117;
+            --card: #1a1d27;
+            --border: #2a2d3a;
+            --text: #e2e8f0;
+            --muted: #8892a4;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --green: #22c55e;
+            --red: #ef4444;
+            --yellow: #eab308;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 { font-size: 20px; font-weight: 600; }
+        header h1 span { color: var(--accent); }
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--card);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .nav-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            background: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.15s;
+        }
+        .nav-tab.active { background: var(--accent); color: white; }
+        .nav-tab:hover:not(.active) { color: var(--text); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .stat-card .label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; }
+        .stat-card .value.green { color: var(--green); }
+        .stat-card .value.red { color: var(--red); }
+        .stat-card .value.yellow { color: var(--yellow); }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(59, 130, 246, 0.05); }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-green { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+        .badge-red { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .badge-yellow { background: rgba(234, 179, 8, 0.15); color: var(--yellow); }
+        .badge-blue { background: rgba(59, 130, 246, 0.15); color: var(--accent); }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-secondary { background: var(--border); color: var(--text); }
+        .btn-secondary:hover { background: #3a3d4a; }
+        .btn-danger { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-group textarea { min-height: 200px; resize: vertical; }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+        .schedule-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(59, 130, 246, 0.08);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .schedule-info .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            display: none;
+        }
+        .toast.show { display: block; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .empty { text-align: center; padding: 40px; color: var(--muted); }
+        .loading { opacity: 0.5; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 <span>Job Hunter</span></h1>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+            <button class="nav-tab" data-tab="jobs">Jobs</button>
+            <button class="nav-tab" data-tab="applications">Applications</button>
+            <button class="nav-tab" data-tab="settings">Settings</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard -->
+        <div class="tab-content active" id="tab-dashboard">
+            <div class="stats-row" id="stats-row"></div>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h2>Schedule</h2>
+                    <button class="btn btn-primary" onclick="runPipeline()">Run Now</button>
+                </div>
+                <div class="schedule-info" id="schedule-info">
+                    <div class="dot"></div>
+                    <span id="schedule-text">Loading...</span>
+                </div>
+                <div class="form-row" style="max-width:300px;">
+                    <div class="form-group">
+                        <label>Hour (0-23)</label>
+                        <input type="number" id="sched-hour" min="0" max="23" value="8">
+                    </div>
+                    <div class="form-group">
+                        <label>Minute (0-59)</label>
+                        <input type="number" id="sched-min" min="0" max="59" value="0">
+                    </div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="updateSchedule()">Update Schedule</button>
+            </div>
+            <div class="card">
+                <h2>Recent Applications</h2>
+                <table>
+                    <thead><tr><th>Job</th><th>Company</th><th>Contact</th><th>Status</th><th>Date</th></tr></thead>
+                    <tbody id="recent-apps"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Jobs -->
+        <div class="tab-content" id="tab-jobs">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h2>Scraped Jobs</h2>
+                    <button class="btn btn-primary btn-sm" onclick="scrapeJobs()">Scrape Now</button>
+                </div>
+                <table>
+                    <thead><tr><th>Title</th><th>Company</th><th>Location</th><th>Score</th><th>Status</th></tr></thead>
+                    <tbody id="jobs-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Applications -->
+        <div class="tab-content" id="tab-applications">
+            <div class="card">
+                <h2>All Applications</h2>
+                <table>
+                    <thead><tr><th>Job</th><th>Company</th><th>Contact</th><th>Email</th><th>Status</th><th>Date</th></tr></thead>
+                    <tbody id="all-apps-table"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div class="tab-content" id="tab-settings">
+            <div class="card">
+                <h2>Candidate Profile</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="set-name" placeholder="John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="set-email" placeholder="john@email.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="set-phone" placeholder="+1-555-123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" id="set-location" placeholder="New York, NY">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="text" id="set-linkedin" placeholder="https://linkedin.com/in/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Title</label>
+                        <input type="text" id="set-title-target" placeholder="Project Manager">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Job Search</h2>
+                <div class="form-group">
+                    <label>Job Titles (comma-separated)</label>
+                    <input type="text" id="set-titles" placeholder="Project Manager, Senior PM, Program Manager">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Locations (comma-separated)</label>
+                        <input type="text" id="set-locations" placeholder="Remote, New York, NY">
+                    </div>
+                    <div class="form-group">
+                        <label>Jobs Per Day</label>
+                        <input type="number" id="set-jobs-per-day" value="10">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Max Hours Old</label>
+                        <input type="number" id="set-hours-old" value="24">
+                    </div>
+                    <div class="form-group">
+                        <label>Min Salary (0 to disable)</label>
+                        <input type="number" id="set-min-salary" value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>LLM Configuration</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>API Base URL</label>
+                        <input type="text" id="set-llm-base" placeholder="https://openrouter.ai/api/v1">
+                    </div>
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input type="password" id="set-llm-key" placeholder="sk-...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <input type="text" id="set-llm-model" placeholder="openai/gpt-4o-mini">
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Email (Gmail SMTP)</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Gmail Address</label>
+                        <input type="email" id="set-email-user" placeholder="you@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>App Password</label>
+                        <input type="password" id="set-email-pass" placeholder="xxxx xxxx xxxx xxxx">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Resume</h2>
+                <div class="form-group">
+                    <label>Base Resume (Markdown)</label>
+                    <textarea id="set-resume" placeholder="Paste your full resume here..."></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Cover Letter Template</h2>
+                <div class="form-group">
+                    <label>Base Cover Letter (Markdown)</label>
+                    <textarea id="set-cover" placeholder="Paste your cover letter template..."></textarea>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="saveSettings()">Save All Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Config — change this to your backend URL after deployment
+        const API = window.location.origin;
+
+        // --- Navigation ---
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+                if (tab.dataset.tab === 'dashboard') loadDashboard();
+                if (tab.dataset.tab === 'jobs') loadJobs();
+                if (tab.dataset.tab === 'applications') loadApplications();
+                if (tab.dataset.tab === 'settings') loadSettings();
+            });
+        });
+
+        // --- Toast ---
+        function showToast(msg, duration = 3000) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), duration);
+        }
+
+        // --- API helpers ---
+        async function api(path, opts = {}) {
+            try {
+                const resp = await fetch(API + path, {
+                    headers: { 'Content-Type': 'application/json' },
+                    ...opts,
+                });
+                if (!resp.ok) throw new Error(await resp.text());
+                return await resp.json();
+            } catch (e) {
+                showToast('Error: ' + e.message);
+                throw e;
+            }
+        }
+
+        // --- Dashboard ---
+        async function loadDashboard() {
+            try {
+                const stats = await api('/api/applications/stats');
+                document.getElementById('stats-row').innerHTML = `
+                    <div class="stat-card"><div class="label">Jobs Scraped</div><div class="value">${stats.total_jobs_scraped}</div></div>
+                    <div class="stat-card"><div class="label">Applications Sent</div><div class="value green">${stats.sent}</div></div>
+                    <div class="stat-card"><div class="label">Failed</div><div class="value red">${stats.failed}</div></div>
+                    <div class="stat-card"><div class="label">Pending</div><div class="value yellow">${stats.pending}</div></div>
+                `;
+            } catch {}
+
+            try {
+                const sched = await api('/api/schedule');
+                document.getElementById('schedule-text').textContent =
+                    sched.enabled ? `Runs daily at ${String(sched.hour).padStart(2,'0')}:${String(sched.minute).padStart(2,'0')} — Next: ${new Date(sched.next_run).toLocaleString()}` : 'Scheduler not active';
+                document.getElementById('sched-hour').value = sched.hour || 8;
+                document.getElementById('sched-min').value = sched.minute || 0;
+            } catch {}
+
+            try {
+                const apps = await api('/api/applications?limit=5');
+                const tbody = document.getElementById('recent-apps');
+                tbody.innerHTML = apps.length ? apps.map(a => `
+                    <tr>
+                        <td>${a.title || '-'}</td>
+                        <td>${a.company || '-'}</td>
+                        <td>${a.contact_name || '-'}</td>
+                        <td><span class="badge badge-${a.status === 'sent' ? 'green' : a.status === 'failed' ? 'red' : 'yellow'}">${a.status}</span></td>
+                        <td>${a.created_at ? new Date(a.created_at).toLocaleDateString() : '-'}</td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" class="empty">No applications yet</td></tr>';
+            } catch {}
+        }
+
+        // --- Jobs ---
+        async function loadJobs() {
+            try {
+                const jobs = await api('/api/jobs?limit=50');
+                const tbody = document.getElementById('jobs-table');
+                tbody.innerHTML = jobs.length ? jobs.map(j => `
+                    <tr>
+                        <td><a href="${j.job_url || '#'}" target="_blank" style="color:var(--accent);text-decoration:none;">${j.title || '-'}</a></td>
+                        <td>${j.company || '-'}</td>
+                        <td>${j.location || '-'}</td>
+                        <td>${j.relevance_score || 0}</td>
+                        <td><span class="badge badge-${j.status === 'applied' ? 'green' : j.status === 'new' ? 'blue' : 'yellow'}">${j.status}</span></td>
+                    </tr>
+                `).join('') : '<tr><td colspan="5" class="empty">No jobs scraped yet. Click "Scrape Now" to start.</td></tr>';
+            } catch {}
+        }
+
+        async function scrapeJobs() {
+            showToast('Scraping jobs...');
+            try {
+                const result = await api('/api/pipeline/scrape', { method: 'POST' });
+                showToast(`Scraped ${result.scraped} jobs, ${result.new} new`);
+                loadJobs();
+            } catch {}
+        }
+
+        // --- Applications ---
+        async function loadApplications() {
+            try {
+                const apps = await api('/api/applications?limit=100');
+                const tbody = document.getElementById('all-apps-table');
+                tbody.innerHTML = apps.length ? apps.map(a => `
+                    <tr>
+                        <td>${a.title || '-'}</td>
+                        <td>${a.company || '-'}</td>
+                        <td>${a.contact_name || '-'}</td>
+                        <td>${a.contact_email || '-'}</td>
+                        <td><span class="badge badge-${a.status === 'sent' ? 'green' : a.status === 'failed' ? 'red' : 'yellow'}">${a.status}</span></td>
+                        <td>${a.created_at ? new Date(a.created_at).toLocaleDateString() : '-'}</td>
+                    </tr>
+                `).join('') : '<tr><td colspan="6" class="empty">No applications yet</td></tr>';
+            } catch {}
+        }
+
+        // --- Settings ---
+        async function loadSettings() {
+            try {
+                const s = await api('/api/settings');
+                const c = s.candidate || {};
+                const search = s.search || {};
+                const llm = s.llm || {};
+                const email = s.email || {};
+
+                document.getElementById('set-name').value = c.name || '';
+                document.getElementById('set-email').value = c.email || '';
+                document.getElementById('set-phone').value = c.phone || '';
+                document.getElementById('set-location').value = c.location || '';
+                document.getElementById('set-linkedin').value = c.linkedin || '';
+                document.getElementById('set-title-target').value = c.title_target || '';
+
+                document.getElementById('set-titles').value = (search.job_titles || []).join(', ');
+                document.getElementById('set-locations').value = (search.locations || []).join(', ');
+                document.getElementById('set-jobs-per-day').value = search.jobs_per_day || 10;
+                document.getElementById('set-hours-old').value = search.hours_old || 24;
+                document.getElementById('set-min-salary').value = search.min_salary || 0;
+
+                document.getElementById('set-llm-base').value = llm.api_base || '';
+                document.getElementById('set-llm-key').value = '';
+                document.getElementById('set-llm-model').value = llm.model || '';
+
+                document.getElementById('set-email-user').value = email.username || '';
+                document.getElementById('set-email-pass').value = '';
+
+                document.getElementById('set-resume').value = s.base_resume || '';
+                document.getElementById('set-cover').value = s.base_cover_letter || '';
+            } catch {}
+        }
+
+        async function saveSettings() {
+            const data = {
+                candidate: {
+                    name: document.getElementById('set-name').value,
+                    email: document.getElementById('set-email').value,
+                    phone: document.getElementById('set-phone').value,
+                    location: document.getElementById('set-location').value,
+                    linkedin: document.getElementById('set-linkedin').value,
+                    title_target: document.getElementById('set-title-target').value,
+                },
+                search: {
+                    job_titles: document.getElementById('set-titles').value.split(',').map(s => s.trim()).filter(Boolean),
+                    locations: document.getElementById('set-locations').value.split(',').map(s => s.trim()).filter(Boolean),
+                    jobs_per_day: parseInt(document.getElementById('set-jobs-per-day').value) || 10,
+                    hours_old: parseInt(document.getElementById('set-hours-old').value) || 24,
+                    min_salary: parseInt(document.getElementById('set-min-salary').value) || 0,
+                },
+                base_resume: document.getElementById('set-resume').value,
+                base_cover_letter: document.getElementById('set-cover').value,
+            };
+
+            // Only update LLM if key is provided
+            const llmKey = document.getElementById('set-llm-key').value;
+            if (llmKey) {
+                data.llm = {
+                    api_base: document.getElementById('set-llm-base').value,
+                    api_key: llmKey,
+                    model: document.getElementById('set-llm-model').value,
+                    max_tokens: 2000,
+                    temperature: 0.7,
+                };
+            }
+
+            // Only update email if password is provided
+            const emailPass = document.getElementById('set-email-pass').value;
+            if (emailPass) {
+                const emailUser = document.getElementById('set-email-user').value;
+                data.email = {
+                    smtp_host: 'smtp.gmail.com',
+                    smtp_port: 587,
+                    username: emailUser,
+                    password: emailPass,
+                    from_name: data.candidate.name,
+                    from_email: emailUser,
+                    signature: `Best regards,\n${data.candidate.name}\n${data.candidate.phone} | ${data.candidate.linkedin}`,
+                };
+            }
+
+            try {
+                await api('/api/settings', { method: 'PUT', body: JSON.stringify(data) });
+                showToast('Settings saved');
+            } catch {}
+        }
+
+        // --- Pipeline ---
+        async function runPipeline() {
+            if (!confirm('Run the full pipeline now? This will scrape, customize, and send emails.')) return;
+            showToast('Running pipeline...');
+            try {
+                await api('/api/pipeline/run', { method: 'POST' });
+                showToast('Pipeline complete!');
+                loadDashboard();
+            } catch {}
+        }
+
+        async function updateSchedule() {
+            const hour = parseInt(document.getElementById('sched-hour').value);
+            const minute = parseInt(document.getElementById('sched-min').value);
+            try {
+                await api(`/api/schedule?hour=${hour}&minute=${minute}`, { method: 'PUT' });
+                showToast(`Schedule updated to ${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`);
+                loadDashboard();
+            } catch {}
+        }
+
+        // --- Init ---
+        loadDashboard();
+    </script>
+</body>
+</html>
