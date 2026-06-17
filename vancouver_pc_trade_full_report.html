@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vancouver PC Trade Hunt — Full Report</title>
+<style>
+  :root {
+    --navy: #1F3864;
+    --blue: #2E4057;
+    --green-dark: #00703C;
+    --green-bg: #C6EFCE;
+    --yellow-bg: #FFEB9C;
+    --red-bg: #FFC7CE;
+    --orange: #FF9900;
+    --grey: #F5F7FA;
+    --border: #CDD5E0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13.5px; color: #222; background: #ECEFF4; }
+  header {
+    background: var(--navy);
+    color: #fff;
+    padding: 28px 40px 20px;
+    border-bottom: 4px solid #F59E0B;
+  }
+  header h1 { font-size: 24px; letter-spacing: .5px; }
+  header p  { margin-top: 6px; opacity: .8; font-size: 13px; }
+  .badge {
+    display: inline-block;
+    background: #F59E0B;
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  main { max-width: 1400px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  /* Section cards */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .card-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .3px;
+  }
+  .card-body { padding: 20px; }
+
+  /* Summary boxes */
+  .stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+  .stat {
+    flex: 1; min-width: 140px;
+    background: var(--grey);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    text-align: center;
+  }
+  .stat .num { font-size: 32px; font-weight: 800; color: var(--navy); }
+  .stat .lbl { font-size: 11px; color: #666; margin-top: 4px; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    background: var(--navy);
+    color: #fff;
+    padding: 9px 10px;
+    text-align: left;
+    font-size: 11.5px;
+    letter-spacing: .3px;
+    white-space: nowrap;
+  }
+  td { padding: 8px 10px; border-bottom: 1px solid #E8ECF2; vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #F8FAFD; }
+
+  .row-green { background: var(--green-bg) !important; }
+  .row-yellow { background: var(--yellow-bg) !important; }
+  .row-red { background: var(--red-bg) !important; }
+
+  .score {
+    display: inline-block;
+    font-weight: 800;
+    font-size: 14px;
+    width: 32px; height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 50%;
+    color: #fff;
+  }
+  .s5 { background: #00703C; }
+  .s4 { background: #4CAF50; color: #fff; }
+  .s3 { background: #E6A800; color: #000; }
+  .s2 { background: #E65100; }
+  .s1 { background: #C62828; }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 12px;
+    margin: 1px 2px;
+    white-space: nowrap;
+  }
+  .tag-green  { background: #C6EFCE; color: #1a5c2e; border: 1px solid #70c48f; }
+  .tag-yellow { background: #FFEB9C; color: #7a5c00; border: 1px solid #f0c040; }
+  .tag-red    { background: #FFC7CE; color: #9c0006; border: 1px solid #f48080; }
+  .tag-blue   { background: #D6E4FF; color: #1a3a8f; border: 1px solid #88abff; }
+  .tag-orange { background: #FFE0B2; color: #7a3300; border: 1px solid #ffb04f; }
+
+  /* Ordered action steps */
+  .action-list { list-style: none; }
+  .action-list li {
+    display: flex; gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid #EEF1F6;
+  }
+  .action-list li:last-child { border-bottom: none; }
+  .time-badge {
+    min-width: 120px;
+    background: var(--navy);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-align: center;
+    height: fit-content;
+    margin-top: 2px;
+  }
+
+  /* Top picks */
+  .pick {
+    display: flex; gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid #EEF1F6;
+  }
+  .pick:last-child { border-bottom: none; }
+  .pick-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--navy); color: #fff;
+    font-size: 16px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pick-title { font-weight: 700; margin-bottom: 4px; font-size: 13.5px; }
+  .pick-body  { color: #444; font-size: 12.5px; line-height: 1.6; }
+
+  /* Hot threads */
+  a { color: #1a56c4; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .legend-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 12.5px; }
+  .legend-swatch { width: 24px; height: 24px; border-radius: 4px; border: 1px solid #ccc; flex-shrink: 0; }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #888;
+    border-top: 1px solid var(--border);
+    background: #fff;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🖥 Vancouver PC Trade Hunt — Full Research Report <span class="badge">30 Leads</span></h1>
+  <p>Generated Tue Jun 17 2026 &nbsp;|&nbsp; Target area: E Broadway &amp; Renfrew, Vancouver &nbsp;|&nbsp;
+     Trade bundle: PS5 Disc Edition + Lenovo Yoga Slim 7 14ITL05 &nbsp;→&nbsp; RTX 3060+ gaming desktop</p>
+</header>
+
+<main>
+
+<!-- ═══ STAT ROW ═══════════════════════════════════════════════════════════════ -->
+<div class="stat-row" style="margin-bottom:28px;">
+  <div class="stat"><div class="num">30</div><div class="lbl">Total Leads</div></div>
+  <div class="stat"><div class="num">7</div><div class="lbl">Score 5 Leads</div></div>
+  <div class="stat"><div class="num">10</div><div class="lbl">Physical Businesses</div></div>
+  <div class="stat"><div class="num">~$510–640</div><div class="lbl">Estimated Bundle Value (CAD)</div></div>
+  <div class="stat"><div class="num">8</div><div class="lbl">Open Tomorrow AM</div></div>
+</div>
+
+<!-- ═══ YOUR BUNDLE ════════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">Your Trade Bundle</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Item</th><th>Condition</th><th>Est. Trade Value (CAD)</th><th>Notes</th></tr>
+      <tr>
+        <td><strong>PS5 Disc Edition</strong></td>
+        <td>Good condition, 1 controller, some digital Sony titles</td>
+        <td>$330 – $380</td>
+        <td>Disc edition commands slight premium over digital. Titles add minor value.</td>
+      </tr>
+      <tr>
+        <td><strong>Lenovo Yoga Slim 7 14ITL05</strong></td>
+        <td>Working, worn exterior, Intel i5/i7 11th Gen, Iris Xe</td>
+        <td>$180 – $260</td>
+        <td>Worn condition reduces value. i7 variant worth more. Iris Xe is not a dedicated GPU.</td>
+      </tr>
+      <tr class="row-green">
+        <td><strong>TOTAL BUNDLE</strong></td>
+        <td>—</td>
+        <td><strong>$510 – $640</strong></td>
+        <td>Target PCs at $700–1,000 → negotiate bundle covers most / all of cost.</td>
+      </tr>
+    </table>
+    <p style="margin-top:12px;color:#555;font-size:12px;">
+      <strong>Target GPU:</strong> RTX 3060 or better (RTX 3060 Ti / 3070 / 3080 all qualify).
+      CPU should be 8th-gen Intel or Ryzen 5 3600 or newer. Min 16 GB RAM.
+    </p>
+  </div>
+</div>
+
+<!-- ═══ TOP 5 PICKS ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">Top 5 Picks — Best Bets for a Deal</div>
+  <div class="card-body">
+    <div class="pick">
+      <div class="pick-num">1</div>
+      <div>
+        <div class="pick-title">r/CanadianHardwareSwap (Reddit)</div>
+        <div class="pick-body">
+          Best overall channel. Canadians post PS5-for-PC trades weekly.
+          Post tonight: <code>[H] PS5 Disc Edition + Yoga Slim 7 [W] RTX 3060+ gaming desktop Vancouver BC</code>.
+          Include timestamps in photos. Fast responses, no middleman.
+          <br><a href="https://reddit.com/r/CanadianHardwareSwap">reddit.com/r/CanadianHardwareSwap</a>
+        </div>
+      </div>
+    </div>
+    <div class="pick">
+      <div class="pick-num">2</div>
+      <div>
+        <div class="pick-title">Kijiji — "Gaming PC accepting trade for PS5" (Active Listing)</div>
+        <div class="pick-body">
+          A seller in Greater Vancouver ALREADY WANTS a PS5. Find it at
+          <a href="https://kijiji.ca/b-desktop-computers/greater-vancouver-area/c772l80003">kijiji.ca › desktop computers › Greater Vancouver</a>
+          — search <em>"gaming pc trade ps5"</em>.
+          DM immediately and confirm GPU spec is RTX 3060 or better.
+        </div>
+      </div>
+    </div>
+    <div class="pick">
+      <div class="pick-num">3</div>
+      <div>
+        <div class="pick-title">FB Group — Buy &amp; Sell PC Gaming (British Columbia 🇨🇦)</div>
+        <div class="pick-body">
+          Large active BC group where builders and flippers hang out.
+          Post your bundle with photos tonight for morning visibility.
+          Builders often want a PS5 as a personal keep.
+          <br><a href="https://facebook.com/groups/buyandsellpcgamingbc/">facebook.com/groups/buyandsellpcgamingbc/</a>
+        </div>
+      </div>
+    </div>
+    <div class="pick">
+      <div class="pick-num">4</div>
+      <div>
+        <div class="pick-title">PayMore Vancouver — 4534 Main St (Open Tue 11am)</div>
+        <div class="pick-body">
+          Dedicated electronics trade-in store — their entire business model is this kind of deal.
+          Bring both devices. They assess at fair market value and may have gaming desktop towers in stock.
+          ~3.5 km from your area. Instagram: @paymorestores.
+        </div>
+      </div>
+    </div>
+    <div class="pick">
+      <div class="pick-num">5</div>
+      <div>
+        <div class="pick-title">The Hackery — 304 Victoria Drive (Open Tue 11am, 1.5 km away)</div>
+        <div class="pick-body">
+          Closest physical store to E Broadway &amp; Renfrew. Refurbished computers, buys &amp; sells used hardware.
+          Call first: <strong>(778) 373-8295</strong>. Ask specifically if they have any gaming towers with RTX cards.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ACTION PLAN ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">Hour-by-Hour Action Plan — Tonight &amp; Tomorrow (Tue Jun 17)</div>
+  <div class="card-body">
+    <ul class="action-list">
+      <li>
+        <span class="time-badge">TONIGHT (NOW)</span>
+        <span>
+          1. Post on <strong>r/CanadianHardwareSwap</strong> + <strong>r/VancouverBCbuy</strong> with timestamped photos of PS5 &amp; Yoga.<br>
+          2. Post in <strong>FB Group "Buy &amp; Sell PC Gaming BC"</strong>.<br>
+          3. Message the Kijiji seller offering "trade for PS5" — confirm specs.<br>
+          4. Join <strong>HardwareSwap Discord</strong> (<a href="https://discord.com/invite/hwswap">discord.com/invite/hwswap</a>) and post in #trade.<br>
+          5. DM @paymorestores on Instagram with photos — ask if they have RTX gaming towers in store.
+        </span>
+      </li>
+      <li>
+        <span class="time-badge">8 – 9:30 AM</span>
+        <span>Check Reddit / FB / Kijiji / Discord replies. Respond to all interested parties.</span>
+      </li>
+      <li>
+        <span class="time-badge">9:30 AM</span>
+        <span>
+          Call <strong>Metro PawnBrokers</strong> — <strong>(604) 451-5626</strong> (4939 Kingsway, Burnaby, ~6 km).<br>
+          Ask: "Do you have any gaming desktop PCs with RTX graphics cards in stock?"
+        </span>
+      </li>
+      <li>
+        <span class="time-badge">10:00 AM</span>
+        <span>
+          Call <strong>A-1 Trade &amp; Loan</strong> — <strong>(604) 875-8005</strong> (2641 Commercial Drive, ~1 km). Closes 4pm — morning visit best.<br>
+          Call <strong>PC Galore</strong> — <strong>(604) 732-7816</strong> (2744 W 4th Ave, Kitsilano, ~7 km). Ask about gaming desktop inventory.<br>
+          Call/email <strong>pcbuy.ca</strong> — <strong>(778) 378-5019</strong> / info@pcbuy.ca. Book appointment for today — mention PS5+laptop trade bundle.
+        </span>
+      </li>
+      <li>
+        <span class="time-badge">11:00 AM</span>
+        <span>
+          Visit <strong>PayMore Vancouver</strong> (4534 Main Street) — bring BOTH devices. Let them assess together.<br>
+          <em>— OR —</em><br>
+          Visit <strong>The Hackery</strong> (304 Victoria Drive, East Van) — closest store, 1.5 km away.
+        </span>
+      </li>
+      <li>
+        <span class="time-badge">Afternoon</span>
+        <span>
+          Follow up on all online leads. Post on Craigslist if still no deal.<br>
+          Contact individual Craigslist/Kijiji sellers with RTX builds and propose PS5+laptop bundle.
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══ BUSINESSES TABLE ═══════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">Physical Businesses (10 Stores)</div>
+  <div class="card-body" style="padding:0;">
+    <table>
+      <colgroup>
+        <col style="width:3%"><col style="width:14%"><col style="width:11%">
+        <col style="width:17%"><col style="width:12%"><col style="width:13%">
+        <col style="width:8%"><col style="width:8%"><col style="width:6%"><col style="width:8%">
+      </colgroup>
+      <tr>
+        <th>#</th><th>Store</th><th>Type</th><th>Address</th>
+        <th>Phone</th><th>Hours</th><th>Distance</th>
+        <th>Open Tomorrow</th><th>Score</th><th>Key Notes</th>
+      </tr>
+      <tr class="row-yellow">
+        <td>1</td><td><strong>The Hackery</strong></td>
+        <td><span class="tag tag-blue">Used Computers</span></td>
+        <td>304 Victoria Drive, Vancouver BC V5L 4C7</td>
+        <td>(778) 373-8295</td>
+        <td>Tue–Sat: 11am–6pm</td>
+        <td><strong>~1.5 km</strong></td>
+        <td><span class="tag tag-yellow">YES 11am</span></td>
+        <td><span class="score s4">4</span></td>
+        <td>Closest store. Call ahead for RTX tower stock.</td>
+      </tr>
+      <tr class="row-yellow">
+        <td>2</td><td><strong>A-1 Trade &amp; Loan</strong></td>
+        <td><span class="tag tag-orange">Pawn Shop</span></td>
+        <td>2641 Commercial Drive, Vancouver BC V5N 4C3</td>
+        <td>(604) 875-8005</td>
+        <td>Mon–Sat: 10am–4pm</td>
+        <td><strong>~1 km</strong></td>
+        <td><span class="tag tag-yellow">YES 10am</span></td>
+        <td><span class="score s3">3</span></td>
+        <td>Very close. Closes 4pm — go early.</td>
+      </tr>
+      <tr class="row-green">
+        <td>3</td><td><strong>PayMore Vancouver</strong></td>
+        <td><span class="tag tag-green">Trade-In Specialist</span></td>
+        <td>4534 Main Street, Vancouver BC V5V 3R5</td>
+        <td>DM @paymorestores</td>
+        <td>Mon–Sat: 11am–7pm<br>Sun: 10am–6pm</td>
+        <td>~3.5 km</td>
+        <td><span class="tag tag-green">YES 11am</span></td>
+        <td><span class="score s5">5</span></td>
+        <td>Core business = electronics trades. Best bet for bundle deal.</td>
+      </tr>
+      <tr class="row-yellow">
+        <td>4</td><td><strong>pcbuy.ca (PCBUY)</strong></td>
+        <td><span class="tag tag-blue">Used/Custom PC (Appt)</span></td>
+        <td>1868 Glen Drive, Vancouver BC V6A 4K4</td>
+        <td>(778) 378-5019<br>info@pcbuy.ca</td>
+        <td>Mon–Sat (appointment)</td>
+        <td>~4 km</td>
+        <td><span class="tag tag-yellow">CALL FIRST</span></td>
+        <td><span class="score s4">4</span></td>
+        <td>Formal trade-in program. Book ASAP.</td>
+      </tr>
+      <tr class="row-yellow">
+        <td>5</td><td><strong>PC Galore</strong></td>
+        <td><span class="tag tag-blue">Used Computers</span></td>
+        <td>2744 W 4th Ave, Vancouver BC V6K 1R1 (Kitsilano)</td>
+        <td>(604) 732-7816</td>
+        <td>Mon–Sat: 10am–6pm</td>
+        <td>~7 km</td>
+        <td><span class="tag tag-yellow">YES 10am</span></td>
+        <td><span class="score s4">4</span></td>
+        <td>30+ years buying/trading computers. Ask about gaming desktops.</td>
+      </tr>
+      <tr class="row-yellow">
+        <td>6</td><td><strong>Metro PawnBrokers</strong></td>
+        <td><span class="tag tag-orange">Pawn Shop</span></td>
+        <td>4939 Kingsway, Burnaby BC V5H 2E5</td>
+        <td>(604) 451-5626</td>
+        <td>Mon–Sat: 9:30am–6pm</td>
+        <td>~6 km</td>
+        <td><span class="tag tag-yellow">YES 9:30am</span></td>
+        <td><span class="score s3">3</span></td>
+        <td>Stocks PlayStation gear. Family-owned = flexible.</td>
+      </tr>
+      <tr>
+        <td>7</td><td><strong>Computer 101</strong></td>
+        <td><span class="tag tag-blue">PC Repair/Build</span></td>
+        <td>Vancouver BC (call for address)</td>
+        <td>(604) 901-9799</td>
+        <td>Mon–Sat: 10am–7pm</td>
+        <td>Unknown</td>
+        <td><span class="tag tag-yellow">YES 10am</span></td>
+        <td><span class="score s2">2</span></td>
+        <td>Does PS5 repair — knows value. Call about used desktop inventory.</td>
+      </tr>
+      <tr>
+        <td>8</td><td><strong>SoneXPC</strong></td>
+        <td><span class="tag tag-blue">Custom PC Builder</span></td>
+        <td>#1035 – 8766 McKim Way, Richmond BC V6X 4G4</td>
+        <td>(604) 717-6111</td>
+        <td>Mon–Sat: 10am–6pm</td>
+        <td>~16 km</td>
+        <td><span class="tag tag-yellow">YES 10am</span></td>
+        <td><span class="score s2">2</span></td>
+        <td>New build specialist. Trade unlikely but possible credit toward build.</td>
+      </tr>
+      <tr>
+        <td>9</td><td><strong>Roath's Pawn Shop</strong></td>
+        <td><span class="tag tag-orange">Pawn Shop</span></td>
+        <td>13573 King George Blvd, Surrey BC V3T 2V1</td>
+        <td>(604) 584-4010</td>
+        <td>Mon–Fri: 9am–6pm<br>Sat: 9am–5pm</td>
+        <td>~22 km</td>
+        <td><span class="tag tag-yellow">YES 9am</span></td>
+        <td><span class="score s2">2</span></td>
+        <td>Far. Call first. Lower priority.</td>
+      </tr>
+      <tr class="row-red">
+        <td>10</td><td><strong><s>A-Z Video Games</s></strong></td>
+        <td><span class="tag tag-red">Video Game Store</span></td>
+        <td>748 Broadway E #102, Vancouver BC V5T 1X9</td>
+        <td>(604) 874-3919</td>
+        <td>⚠️ APPEARS CLOSED</td>
+        <td>~2 km</td>
+        <td><span class="tag tag-red">LIKELY CLOSED</span></td>
+        <td><span class="score s1">1</span></td>
+        <td>Marked CLOSED on Yelp 2026. No gaming PC inventory even when open. Skip.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ ALL 30 LEADS ══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">All 30 Leads — Sorted by Trade Score (Highest First)</div>
+  <div class="card-body" style="padding:0;">
+    <table>
+      <colgroup>
+        <col style="width:2%"><col style="width:18%"><col style="width:9%">
+        <col style="width:16%"><col style="width:18%"><col style="width:8%">
+        <col style="width:8%"><col style="width:7%"><col style="width:5%"><col style="width:9%">
+      </colgroup>
+      <tr>
+        <th>#</th><th>Name / Handle</th><th>Platform</th>
+        <th>Contact</th><th>Listing / Offer</th>
+        <th>Trade Friendly?</th><th>Location</th>
+        <th>Open Tomorrow</th><th>Score</th><th>Notes</th>
+      </tr>
+
+      <!-- Score 5 -->
+      <tr class="row-green"><td>1</td><td><strong>Kijiji — "Gaming PC accepting trade for PS5"</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-desktop-computers/greater-vancouver-area/c772l80003">kijiji.ca link →</a></td><td>Gaming PC in excellent condition; seller explicitly accepting PS5</td><td><span class="tag tag-green">YES — explicit</span></td><td>Greater Vancouver</td><td>Unknown</td><td><span class="score s5">5</span></td><td>CRITICAL — seller wants PS5. Confirm RTX 3060+ spec.</td></tr>
+      <tr class="row-green"><td>2</td><td><strong>Kijiji — RTX 2070 Super, i7-9700K ("PS5 + $500")</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">kijiji.ca link →</a></td><td>RTX 2070 Super build; seller explicitly named PS5 as trade</td><td><span class="tag tag-green">YES — named PS5</span></td><td>BC</td><td>Unknown</td><td><span class="score s5">5</span></td><td>Offer PS5+Yoga instead of PS5+$500. RTX 2070 Super beats target.</td></tr>
+      <tr class="row-green"><td>3</td><td><strong>FB Group — Buy &amp; Sell PC Gaming BC</strong></td><td>Facebook</td><td><a href="https://facebook.com/groups/buyandsellpcgamingbc/">facebook.com/groups/buyandsellpcgamingbc/</a></td><td>Active BC marketplace; trade posts frequent</td><td><span class="tag tag-green">YES</span></td><td>Province-wide</td><td>24/7</td><td><span class="score s5">5</span></td><td>Post bundle tonight with photos. Fastest community response.</td></tr>
+      <tr class="row-green"><td>4</td><td><strong>Reddit r/CanadianHardwareSwap</strong></td><td>Reddit</td><td><a href="https://reddit.com/r/CanadianHardwareSwap">reddit.com/r/CanadianHardwareSwap</a></td><td>Canada hardware trading sub; PS5-for-PC trades weekly</td><td><span class="tag tag-green">YES</span></td><td>Canada-wide</td><td>24/7</td><td><span class="score s5">5</span></td><td>Post [H] PS5 disc + Yoga [W] RTX 3060+ desktop Vancouver tonight.</td></tr>
+      <tr class="row-green"><td>5</td><td><strong>PayMore Vancouver</strong></td><td>Physical Store</td><td>4534 Main St, Vancouver | @paymorestores</td><td>Electronics trade-in; gaming PCs, PS5, laptops</td><td><span class="tag tag-green">YES — core business</span></td><td>Main &amp; 29th, Vancouver</td><td>YES 11am</td><td><span class="score s5">5</span></td><td>Bring both devices. Bundle trade assessment on the spot.</td></tr>
+      <tr class="row-green"><td>6</td><td><strong>Reddit r/hardwareswap</strong></td><td>Reddit + Discord</td><td><a href="https://reddit.com/r/hardwareswap">reddit.com/r/hardwareswap</a> | <a href="https://discord.com/invite/hwswap">Discord</a></td><td>Large hardware trading community; Canadian sellers active</td><td><span class="tag tag-green">YES</span></td><td>International</td><td>24/7</td><td><span class="score s5">5</span></td><td>Post tonight. Search 'PS5 Canada' for active trade threads.</td></tr>
+      <tr class="row-green"><td>7</td><td><strong>HardwareSwap Discord</strong></td><td>Discord</td><td><a href="https://discord.com/invite/hwswap">discord.com/invite/hwswap</a></td><td>Real-time trading; many Vancouver/BC users</td><td><span class="tag tag-green">YES</span></td><td>Online</td><td>24/7</td><td><span class="score s5">5</span></td><td>Post in #trade or #wtb channel immediately.</td></tr>
+
+      <!-- Score 4 -->
+      <tr class="row-yellow"><td>8</td><td><strong>The Hackery</strong></td><td>Physical Store</td><td>304 Victoria Drive, Vancouver | (778) 373-8295</td><td>Refurbished PCs; buys/sells/trades desktops, laptops</td><td><span class="tag tag-yellow">YES</span></td><td>East Vancouver (1.5 km)</td><td>YES 11am</td><td><span class="score s4">4</span></td><td>Closest store. Call ahead.</td></tr>
+      <tr class="row-yellow"><td>9</td><td><strong>PC Galore</strong></td><td>Physical Store</td><td>2744 W 4th Ave, Vancouver | (604) 732-7816</td><td>30-yr used computer store; buys &amp; trades</td><td><span class="tag tag-yellow">YES</span></td><td>Kitsilano (~7 km)</td><td>YES 10am</td><td><span class="score s4">4</span></td><td>Oldest used computer store in Vancouver.</td></tr>
+      <tr class="row-yellow"><td>10</td><td><strong>pcbuy.ca (PCBUY)</strong></td><td>Physical (Appt)</td><td>1868 Glen Dr, Vancouver | (778) 378-5019</td><td>Used &amp; custom PCs; formal GPU/computer trade-in program</td><td><span class="tag tag-yellow">YES — formal program</span></td><td>Vancouver (~4 km)</td><td>APPT REQUIRED</td><td><span class="score s4">4</span></td><td>Book appointment ASAP.</td></tr>
+      <tr class="row-yellow"><td>11</td><td><strong>Reddit r/VancouverBCbuy</strong></td><td>Reddit</td><td><a href="https://reddit.com/r/VancouverBCbuy">reddit.com/r/VancouverBCbuy</a></td><td>Local Vancouver buy/sell sub</td><td><span class="tag tag-yellow">YES</span></td><td>Vancouver</td><td>24/7</td><td><span class="score s4">4</span></td><td>Post [H] PS5+Yoga [W] gaming desktop tonight.</td></tr>
+      <tr class="row-yellow"><td>12</td><td><strong>Kijiji BC — RTX 4080 ("trade PS5")</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">kijiji.ca link →</a></td><td>High-end PC with RTX 4080; seller mentioned PS5 trade</td><td><span class="tag tag-green">YES — wants PS5</span></td><td>BC</td><td>Unknown</td><td><span class="score s4">4</span></td><td>RTX 4080 is overkill but great. Ask if Yoga can replace cash top-up.</td></tr>
+
+      <!-- Score 3 -->
+      <tr><td>13</td><td><strong>A-1 Trade &amp; Loan</strong></td><td>Pawn Shop</td><td>2641 Commercial Drive | (604) 875-8005</td><td>Vancouver's oldest pawnshop; electronics, gaming</td><td><span class="tag tag-orange">Possible</span></td><td>Commercial Drive (~1 km)</td><td>YES 10am</td><td><span class="score s3">3</span></td><td>Very close. Closes at 4pm — go early.</td></tr>
+      <tr><td>14</td><td><strong>Metro PawnBrokers</strong></td><td>Pawn Shop</td><td>4939 Kingsway, Burnaby | (604) 451-5626</td><td>Stocks PlayStation, gaming consoles, electronics</td><td><span class="tag tag-orange">Possible</span></td><td>Burnaby (~6 km)</td><td>YES 9:30am</td><td><span class="score s3">3</span></td><td>Family-owned = flexible on bundles.</td></tr>
+      <tr><td>15</td><td><strong>Craigslist Vancouver — RTX 3070 &amp; i7-9700K ($950)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/sya?query=gaming+pc">Craigslist search →</a></td><td>Gaming PC: RTX 3070, i7-9700K — $950</td><td><span class="tag tag-orange">Unknown</span></td><td>Vancouver</td><td>Unknown</td><td><span class="score s3">3</span></td><td>RTX 3070 beats target. Propose PS5+Yoga as trade.</td></tr>
+      <tr><td>16</td><td><strong>Craigslist Burnaby — i9-10850K &amp; RTX 3070 ($850)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/bnc/sya">Burnaby Craigslist →</a></td><td>Gaming PC: i9-10850K, RTX 3070, 16GB — $850</td><td><span class="tag tag-orange">Unknown</span></td><td>Burnaby (~6 km)</td><td>Unknown</td><td><span class="score s3">3</span></td><td>Strong specs at good price. Bundle should be near parity.</td></tr>
+      <tr><td>17</td><td><strong>Kijiji BC — RTX 3070, i5-14600KF, 32GB DDR5 ($1,600 OBO)</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">kijiji.ca link →</a></td><td>Modern build; $1,600 "open to negotiations"</td><td><span class="tag tag-yellow">Possibly</span></td><td>Delta/Surrey/Langley (~25 km)</td><td>Unknown</td><td><span class="score s3">3</span></td><td>"Open to negotiations" = trade room. Cash gap needed.</td></tr>
+      <tr><td>18</td><td><strong>Craigslist Coquitlam — RTX 3060 &amp; Ryzen 5 5600 ($750)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/sya?query=gaming+pc">Craigslist search →</a></td><td>Gaming PC: RTX 3060, Ryzen 5 5600 — $750</td><td><span class="tag tag-orange">Unknown</span></td><td>Coquitlam (~22 km)</td><td>Unknown</td><td><span class="score s3">3</span></td><td>Meets min spec. Bundle close to asking price. ~45 min transit.</td></tr>
+      <tr><td>19</td><td><strong>Craigslist Port Moody — RTX 3060 Ti, Ryzen 7 5700X ($900, "open to offers")</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/sya?query=gaming+pc">Craigslist search →</a></td><td>RTX 3060 Ti, Ryzen 7 5700X — $900, "open to offers"</td><td><span class="tag tag-yellow">"Open to offers"</span></td><td>Port Moody (~30 km)</td><td>Unknown</td><td><span class="score s3">3</span></td><td>Exceeds target spec. Strong trade opportunity. ~1hr transit.</td></tr>
+      <tr><td>20</td><td><strong>Craigslist North Van — RTX 3060, 64GB RAM ($675)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/sya?query=gaming+pc">Craigslist search →</a></td><td>Gaming PC: RTX 3060, 64GB RAM — $675</td><td><span class="tag tag-orange">Unknown</span></td><td>North Vancouver (~20 km)</td><td>Unknown</td><td><span class="score s3">3</span></td><td>Meets target. 64GB RAM is unusual — ask about use case.</td></tr>
+      <tr><td>21</td><td><strong>Kijiji BC — Alienware Aurora R12 (i7-11700F, RTX 3070, 32GB)</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-desktop-computers/greater-vancouver-area/c772l80003">kijiji.ca link →</a></td><td>Dell Alienware Aurora R12; RTX 3070, 32GB DDR4</td><td><span class="tag tag-orange">Unknown</span></td><td>Greater Vancouver</td><td>Unknown</td><td><span class="score s3">3</span></td><td>Solid machine. Alienware sellers may be less flexible. Ask.</td></tr>
+      <tr><td>22</td><td><strong>Kijiji BC — GTX 980 PC ($700, "trade for PS5")</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">kijiji.ca link →</a></td><td>Gaming PC with GTX 980; $700, wants PS5 trade</td><td><span class="tag tag-green">YES — wants PS5</span></td><td>BC</td><td>Unknown</td><td><span class="score s3">3</span></td><td><span class="tag tag-red">RED FLAG</span> GTX 980 does NOT meet RTX 3060+ target. Hardware too weak. Skip.</td></tr>
+
+      <!-- Score 2 -->
+      <tr><td>23</td><td><strong>Craigslist Surrey — RTX 3070, i5-13400F ($979)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/sya?query=gaming+pc">Craigslist search →</a></td><td>Gaming PC: i5-13400F, RTX 3070 — $979</td><td><span class="tag tag-orange">Unknown</span></td><td>Surrey (~22 km)</td><td>Unknown</td><td><span class="score s2">2</span></td><td>RTX 3070 great. $979 = some gap from bundle value.</td></tr>
+      <tr><td>24</td><td><strong>Craigslist Burnaby — ASUS ROG RTX 3070 ($1,600)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/bnc/sya">Burnaby Craigslist →</a></td><td>ASUS ROG gaming PC, RTX 3070 — $1,600</td><td><span class="tag tag-orange">Unknown</span></td><td>Burnaby (~6 km)</td><td>Unknown</td><td><span class="score s2">2</span></td><td>$1,600 is steep for bundle value. Cash gap likely.</td></tr>
+      <tr><td>25</td><td><strong>Kijiji BC — RTX 3060, i5-12600KF ($2,500)</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">kijiji.ca link →</a></td><td>RTX 3060 system asking $2,500</td><td><span class="tag tag-orange">Unknown</span></td><td>Vancouver</td><td>Unknown</td><td><span class="score s2">2</span></td><td><span class="tag tag-red">RED FLAG</span> Heavily overpriced for RTX 3060. Avoid.</td></tr>
+      <tr><td>26</td><td><strong>SoneXPC</strong></td><td>Physical Store</td><td>#1035 – 8766 McKim Way, Richmond | (604) 717-6111</td><td>Custom gaming PC builder; RTX 5000-series stock</td><td><span class="tag tag-orange">Unlikely</span></td><td>Richmond (~16 km)</td><td>YES 10am</td><td><span class="score s2">2</span></td><td>Primarily new builds. Sell bundle separately &amp; use cash here.</td></tr>
+      <tr><td>27</td><td><strong>Computer 101</strong></td><td>Physical Store</td><td>Vancouver BC | (604) 901-9799</td><td>PC repair/build; does PS5 repairs</td><td><span class="tag tag-orange">Maybe</span></td><td>Vancouver</td><td>YES 10am</td><td><span class="score s2">2</span></td><td>Knows PS5 value. Call about desktop inventory.</td></tr>
+      <tr><td>28</td><td><strong>Roath's Pawn Shop</strong></td><td>Pawn Shop</td><td>13573 King George Blvd, Surrey | (604) 584-4010</td><td>Electronics, jewelry, gaming gear</td><td><span class="tag tag-orange">Possible</span></td><td>Surrey (~22 km)</td><td>YES 9am</td><td><span class="score s2">2</span></td><td>Far. Call first. Lower priority.</td></tr>
+      <tr><td>29</td><td><strong>@gamersvancouver (Instagram)</strong></td><td>Instagram</td><td><a href="https://instagram.com/gamersvancouver">@gamersvancouver</a></td><td>Vancouver gaming community; large local following</td><td><span class="tag tag-orange">Long shot</span></td><td>Vancouver</td><td>24/7</td><td><span class="score s2">2</span></td><td>DM asking if any followers want to trade. Quick to try.</td></tr>
+      <tr><td>30</td><td><strong>RedFlagDeals Greater Vancouver Forum</strong></td><td>Forum</td><td><a href="https://forums.redflagdeals.com/tags/greater%20vancouver/">forums.redflagdeals.com</a></td><td>Canadian deals forum; active Vancouver community</td><td><span class="tag tag-orange">Possible</span></td><td>Online</td><td>24/7</td><td><span class="score s2">2</span></td><td>Post in BS&amp;T section as backup.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ HOT THREADS ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">🔥 Hot Threads — Active Listings &amp; Communities to Hit Now</div>
+  <div class="card-body" style="padding:0;">
+    <table>
+      <tr><th>#</th><th>Thread / Listing</th><th>Platform</th><th>Link</th><th>Why It Matters</th></tr>
+      <tr class="row-green"><td>1</td><td><strong>Kijiji — "Gaming PC accepting trade for PS5"</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-desktop-computers/greater-vancouver-area/c772l80003">Open listing →</a></td><td>Seller already wants YOUR item. Contact first.</td></tr>
+      <tr class="row-green"><td>2</td><td><strong>Kijiji — RTX 4080 gaming PC "trade PS5"</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">BC gaming PCs →</a></td><td>RTX 4080 — overkill but seller wants PS5. Negotiate Yoga as add-on.</td></tr>
+      <tr class="row-green"><td>3</td><td><strong>Kijiji — RTX 2070 Super ("PS5 + $500")</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-computer/british-columbia/gaming-pc/k0c16l9007">BC gaming PCs →</a></td><td>Named PS5. Counter-offer: PS5 + Yoga instead of PS5 + cash.</td></tr>
+      <tr class="row-green"><td>4</td><td><strong>FB Group — Buy &amp; Sell PC Gaming (BC) live feed</strong></td><td>Facebook</td><td><a href="https://facebook.com/groups/buyandsellpcgamingbc/">Open group →</a></td><td>Post tonight. Builders who flip rigs often want a PS5.</td></tr>
+      <tr><td>5</td><td><strong>r/CanadianHardwareSwap — search "PS5 gaming PC"</strong></td><td>Reddit</td><td><a href="https://reddit.com/r/CanadianHardwareSwap">Open subreddit →</a></td><td>Post and search. Best Canada-specific trading community.</td></tr>
+      <tr><td>6</td><td><strong>HardwareSwap Discord #trade channel</strong></td><td>Discord</td><td><a href="https://discord.com/invite/hwswap">Join server →</a></td><td>Fastest real-time response. Post immediately.</td></tr>
+      <tr><td>7</td><td><strong>Craigslist Vancouver — RTX by owner (live feed)</strong></td><td>Craigslist</td><td><a href="https://vancouver.craigslist.org/search/sya?query=rtx&purveyor=owner">RTX listings →</a></td><td>Multiple RTX 3060/3070 builds $675–$1,000. DM all about bundle trade.</td></tr>
+      <tr><td>8</td><td><strong>Kijiji Greater Vancouver desktops (live feed)</strong></td><td>Kijiji</td><td><a href="https://kijiji.ca/b-desktop-computers/greater-vancouver-area/c772l80003">Browse →</a></td><td>Filter by price $600–$1,000. Look for "OBO" or "open to trade".</td></tr>
+      <tr><td>9</td><td><strong>r/VancouverBCbuy — local community</strong></td><td>Reddit</td><td><a href="https://reddit.com/r/VancouverBCbuy">Open subreddit →</a></td><td>Post [H] PS5+Yoga [W] gaming desktop. Local audience only.</td></tr>
+      <tr><td>10</td><td><strong>PayMore Vancouver — DM @paymorestores</strong></td><td>Instagram</td><td><a href="https://instagram.com/paymorestores">@paymorestores →</a></td><td>DM tonight with photos. Ask about RTX gaming towers in stock.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ LEGEND ════════════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">Colour Legend</div>
+  <div class="card-body">
+    <div class="legend-row"><div class="legend-swatch" style="background:#C6EFCE;"></div> <strong>Green row</strong> — Seller or platform explicitly mentions PS5 trade / already wants your device</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#FFEB9C;"></div> <strong>Yellow row</strong> — Physical store open tomorrow morning (Tue Jun 17)</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#FFC7CE;"></div> <strong>Red row</strong> — Closed, below-spec hardware, or red flag — avoid / skip</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#00703C;"></div> <span class="score s5" style="font-size:11px;width:24px;height:24px;line-height:24px;">5</span> &nbsp; Best — dedicated trade platform or core business is electronics trading</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#4CAF50;"></div> <span class="score s4" style="font-size:11px;width:24px;height:24px;line-height:24px;">4</span> &nbsp; Very good — actively buys and trades used computers</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#E6A800;"></div> <span class="score s3" style="font-size:11px;width:24px;height:24px;line-height:24px;color:#000;">3</span> &nbsp; Moderate — worth contacting, trade signal unclear</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#E65100;"></div> <span class="score s2" style="font-size:11px;width:24px;height:24px;line-height:24px;">2</span> &nbsp; Lower confidence — cash-focused or remote</div>
+    <div class="legend-row"><div class="legend-swatch" style="background:#C62828;"></div> <span class="score s1" style="font-size:11px;width:24px;height:24px;line-height:24px;">1</span> &nbsp; Not recommended</div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Vancouver PC Trade Hunt Report &nbsp;·&nbsp; Generated Jun 17 2026 &nbsp;·&nbsp; Research by Claude Code (claude-sonnet-4-6)
+  &nbsp;·&nbsp; All leads sourced from Kijiji, Craigslist, Reddit, Yelp, Google, and business websites.
+  Prices and hours subject to change — always call ahead before visiting.
+</footer>
+
+</body>
+</html>
